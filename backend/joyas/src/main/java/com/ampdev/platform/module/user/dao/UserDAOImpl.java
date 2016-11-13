@@ -186,10 +186,6 @@ public class UserDAOImpl implements IUserDao
 		{
 			dataAccess.create("user", userData);
 			userDetails.setId(userData.getDataId());
-			CountryData countryData = Util.getCountryData(userDetails.getCountryName());
-			userDetails.setCountry(countryData);
-
-			dataAccess.create("userDetails", userDetails);
 		}
 		catch (DataAccessException e)
 		{

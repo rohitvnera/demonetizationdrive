@@ -59,10 +59,10 @@ public class BankResource extends RestBaseResource {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<?> createBank(RequestEntity<BankStatus> requestEntity) {
         BankStatus bankStatus = requestEntity.getBody();
-        return saveOrUpdateBank(bankStatus);
+        return save(bankStatus);
     }
 
-    private ResponseEntity<?> saveOrUpdateBank(BankStatus bankStatus) {
+    private ResponseEntity<?> save(BankStatus bankStatus) {
         if (bankStatus == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -72,10 +72,10 @@ public class BankResource extends RestBaseResource {
             if (bankStatusDB == null) {
                 dataAccess.create(bankStatus);
             } else {
-                bankStatus.setId(bankStatusDB.getId());
-                dataAccess.update(bankStatus);
+                System.out.println(String.format("Bank with id %s at location (%s,%s) alread exists",
+                        bankStatus.getId(), bankStatus.getLatX(), bankStatus.getLatY()));
             }
-            return new ResponseEntity<>(bankStatus, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,9 +86,9 @@ public class BankResource extends RestBaseResource {
     public ResponseEntity<?> createBanks(RequestEntity<List<BankStatus>> requestEntity) {
         List<BankStatus> bankStatuses = requestEntity.getBody();
         for (BankStatus bankStatus : bankStatuses) {
-            saveOrUpdateBank(bankStatus);
+            save(bankStatus);
         }
-        return new ResponseEntity<>(bankStatuses, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
@@ -102,7 +102,7 @@ public class BankResource extends RestBaseResource {
             if (bankStatusFromDB != null) {
                 bankStatus.setId(bankStatusFromDB.getId());
                 dataAccess.update(bankStatus);
-                return new ResponseEntity<>(bankStatus, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(String.format("Entity with name %d at location (%s,%s) doesn't exist",
                         bankStatusFromDB.getName(), bankStatusFromDB.getLatX(), bankStatus.getLatY()),

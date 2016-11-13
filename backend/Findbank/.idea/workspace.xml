@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="23d2b6a8-678c-4bcf-8157-89268366acf3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../joyas/joyas.iml" afterPath="$PROJECT_DIR$/../joyas/joyas.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../frontend/index.html" afterPath="$PROJECT_DIR$/../../frontend/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../frontend/js/main.js" afterPath="$PROJECT_DIR$/../../frontend/js/main.js" />
     </list>
     <ignored path="Findbank.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -965,12 +966,12 @@
       <option name="number" value="Default" />
       <updated>1479021491113</updated>
       <workItem from="1479021494235" duration="7296000" />
-      <workItem from="1479068478893" duration="23000" />
+      <workItem from="1479068478893" duration="647000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7319000" />
+    <option name="totallyTimeSpent" value="7943000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="58" y="23" width="1382" height="877" extended-state="6" />
@@ -985,7 +986,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938075" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938075" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5322793" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5322793" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938075" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Persistence" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />

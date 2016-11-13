@@ -79,10 +79,11 @@ jQuery(function($) {'use strict',
 		social_tools: false
 	});	
 
+
 	var map;
     var infowindow;
     var markersArray = [];
-    var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
+    var pyrmont = new google.maps.LatLng(18.5333, 73.8667);
     var marker;
     var geocoder = new google.maps.Geocoder();
     var infowindow = new google.maps.InfoWindow();
@@ -183,7 +184,7 @@ jQuery(function($) {'use strict',
 	                debugger;
 	                var dataToSave = saveMapData(results);
 	                $.ajax({
-					  url: 'http://localhost/api/findbank/ws/findbank/creates',
+					  url: 'https://staging.indiafindbank.in/api/findbank/ws/findbank/creates',
 					  type:'POST',
 					 // crossDomain: true,
 				      dataType: 'json',
@@ -191,7 +192,7 @@ jQuery(function($) {'use strict',
 					  contentType: 'application/json',
 					  success: function(result){
 						  	debugger;
-						  	 $.ajax({url: "http://localhost/api/findbank/ws/findbank/ids",
+						  	 $.ajax({url: "https://staging.indiafindbank.in/api/findbank/ws/findbank/ids",
 					        //crossDomain: true,
 					        type:'POST',
 					        dataType: 'json',
@@ -288,7 +289,7 @@ jQuery(function($) {'use strict',
 			"nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
 			  "mapId" : markerId
 			};
-    	$.ajax({url: "http://localhost/api/findbank/ws/findbank/update2",
+    	$.ajax({url: "https://staging.indiafindbank.in/api/findbank/ws/findbank/update2",
 		        //crossDomain: true,
 		        type:'PUT',
 		        dataType: 'json',
@@ -300,7 +301,7 @@ jQuery(function($) {'use strict',
     }
 
     function showMap(){
-        var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
+        var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png&key=AIzaSyClM9KkifxJZgbSAKWQGz8QhUnAzNGEkuU';
         var markerImage = new google.maps.MarkerImage(imageUrl,new google.maps.Size(24, 32));
         var input_addr=$('#address').val();
         geocoder.geocode({address: input_addr}, function(results, status) {

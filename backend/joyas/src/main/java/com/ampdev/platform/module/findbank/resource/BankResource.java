@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class BankResource extends RestBaseResource {
 
-
+    private final static String SUCCESS = "{\"status\" : true}";
     @Autowired
     private BankDao bankDao;
 
@@ -75,7 +75,7 @@ public class BankResource extends RestBaseResource {
                 System.out.println(String.format("Bank with id %s at location (%s,%s) alread exists",
                         bankStatus.getId(), bankStatus.getLatX(), bankStatus.getLatY()));
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,7 +88,7 @@ public class BankResource extends RestBaseResource {
         for (BankStatus bankStatus : bankStatuses) {
             save(bankStatus);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
@@ -102,7 +102,38 @@ public class BankResource extends RestBaseResource {
             if (bankStatusFromDB != null) {
                 bankStatus.setId(bankStatusFromDB.getId());
                 dataAccess.update(bankStatus);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(String.format("Entity with name %d at location (%s,%s) doesn't exist",
+                        bankStatusFromDB.getName(), bankStatusFromDB.getLatX(), bankStatus.getLatY()),
+                        HttpStatus.BAD_REQUEST);
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(String.format("Error updating bank with name %d at location (%s,%s) doesn't exist",
+                    bankStatus.getName(), bankStatus.getLatX(), bankStatus.getLatY()),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/update2", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateBankSelective(RequestEntity<BankStatus> requestEntity) {
+        final BankStatus bankStatus = requestEntity.getBody();
+        if (bankStatus == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            final BankStatus bankStatusFromDB = bankDao.findByMapId(bankStatus.getMapId());
+            if (bankStatusFromDB != null) {
+                bankStatusFromDB.setCashAvailable(bankStatus.getCashAvailable());
+                if (bankStatus.getCashAvailable() == 1) {
+                    bankStatusFromDB.setAvgWaitTime(bankStatus.getAvgWaitTime());
+                } else {
+                    bankStatusFromDB.setAvgWaitTime(-1);
+                    bankStatusFromDB.setNextAvailabilty(bankStatus.getNextAvailabilty());
+                }
+                dataAccess.update(bankStatusFromDB);
+                return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(String.format("Entity with name %d at location (%s,%s) doesn't exist",
                         bankStatusFromDB.getName(), bankStatusFromDB.getLatX(), bankStatus.getLatY()),

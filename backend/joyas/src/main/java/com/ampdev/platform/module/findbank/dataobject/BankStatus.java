@@ -32,6 +32,9 @@ public class BankStatus extends PersistedDataObject implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "place_id")
+    private String placeId;
+
 
     @Column(name = "map_id")
     private String mapId;
@@ -64,6 +67,14 @@ public class BankStatus extends PersistedDataObject implements Serializable {
 
     @Transient
     private boolean isAdded;
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
 
     public long getId() {
         return id;
@@ -206,6 +217,7 @@ public class BankStatus extends PersistedDataObject implements Serializable {
         if (latY != null ? !latY.equals(that.latY) : that.latY != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (placeId != null ? !placeId.equals(that.placeId) : that.placeId != null) return false;
         if (mapId != null ? !mapId.equals(that.mapId) : that.mapId != null) return false;
         if (mapReference != null ? !mapReference.equals(that.mapReference) : that.mapReference != null) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
@@ -224,6 +236,7 @@ public class BankStatus extends PersistedDataObject implements Serializable {
         result = 31 * result + (latY != null ? latY.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (placeId != null ? placeId.hashCode() : 0);
         result = 31 * result + (mapId != null ? mapId.hashCode() : 0);
         result = 31 * result + (mapReference != null ? mapReference.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
@@ -245,6 +258,7 @@ public class BankStatus extends PersistedDataObject implements Serializable {
                 ", latY='" + latY + '\'' +
                 ", type='" + type + '\'' +
                 ", name='" + name + '\'' +
+                ", placeId='" + placeId + '\'' +
                 ", mapId='" + mapId + '\'' +
                 ", mapReference='" + mapReference + '\'' +
                 ", address='" + address + '\'' +

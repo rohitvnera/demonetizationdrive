@@ -7,6 +7,7 @@ import com.ampdev.platform.framework.rest.security.token.TokenAuthenticationFilt
 import com.ampdev.platform.framework.rest.security.token.TokenInfo;
 import com.ampdev.platform.framework.rest.security.token.TokenManagerImpl;
 import com.ampdev.platform.module.common.exception.BOException;
+import com.ampdev.platform.module.common.util.Util;
 import com.ampdev.platform.module.user.UserBO;
 import com.ampdev.platform.module.user.dataobject.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,51 +16,54 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
-public class LoginExecutor extends PostExecutor<UserData, String>
-{
+import java.util.List;
+import java.util.stream.Collectors;
 
-	@Autowired
-	private UserBO userBO;
+public class LoginExecutor extends PostExecutor<UserData, String> {
 
-	@Autowired
-	private IAuthorizer userAuthorizer;
+    @Autowired
+    private UserBO userBO;
 
-
-	@Override
-	public ResponseEntity<String> executeBusinessLogic(RequestEntity<UserData> requestEntity) throws ExecutorException
-	{
-		ResponseEntity<String> responseEntity = null;
-		UserData userData = requestEntity.getBody();
-
-		try
-		{
-			if (userBO.authenticate(userData))
-			{
-				HttpHeaders responseHeaders = new HttpHeaders();
-				String userName = userData.getUserName();
-				TokenInfo tokenInfo = TokenManagerImpl.getTokenManager().createNewToken(userName);
-				responseHeaders.set(TokenAuthenticationFilter.HEADER_TOKEN, tokenInfo.getToken());
-				responseEntity = new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
-			}
-			else
-			{
-				responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			}
-		}
-		catch (BOException e)
-		{
-			e.printStackTrace();
-			throw new ExecutorException();
-		}
-
-		return responseEntity;
-	}
+    @Autowired
+    private IAuthorizer userAuthorizer;
 
 
-	@Override
-	public IAuthorizer getAuthorizer()
-	{
-		return userAuthorizer;
-	}
+    @Override
+    public ResponseEntity<String> executeBusinessLogic(RequestEntity<UserData> requestEntity) throws ExecutorException {
+        ResponseEntity<String> responseEntity = null;
+        UserData userData = requestEntity.getBody();
+
+        try {
+            if (userBO.authenticate(userData)) {
+                HttpHeaders responseHeaders = new HttpHeaders();
+                String userName = userData.getUserName();
+                List<TokenInfo> tokens = TokenManagerImpl.getTokenManager().getUserTokens(userName)
+                        .stream()
+                        .filter(t -> t != null)
+                        .collect(Collectors.toList());
+                TokenInfo tokenInfo;
+                if (Util.isEmpty(tokens)) {
+                    tokenInfo = TokenManagerImpl.getTokenManager().createNewToken(userName);
+                } else {
+                    tokenInfo = tokens.get(0);
+                }
+                responseHeaders.set(TokenAuthenticationFilter.HEADER_TOKEN, tokenInfo.getToken());
+                responseEntity = new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+            } else {
+                responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (BOException e) {
+            e.printStackTrace();
+            throw new ExecutorException();
+        }
+
+        return responseEntity;
+    }
+
+
+    @Override
+    public IAuthorizer getAuthorizer() {
+        return userAuthorizer;
+    }
 
 }

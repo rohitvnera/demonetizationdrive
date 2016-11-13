@@ -4,7 +4,6 @@ import com.ampdev.platform.framework.dataaccess.IDataAccess;
 import com.ampdev.platform.framework.dataaccess.exception.DataAccessException;
 import com.ampdev.platform.framework.rest.RestBaseResource;
 import com.ampdev.platform.module.common.dataobject.ID;
-import com.ampdev.platform.module.common.util.Util;
 import com.ampdev.platform.module.findbank.dao.BankDao;
 import com.ampdev.platform.module.findbank.dataobject.BankStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,12 +59,16 @@ public class BankResource extends RestBaseResource {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<?> createBank(RequestEntity<BankStatus> requestEntity) {
         BankStatus bankStatus = requestEntity.getBody();
+        return saveOrUpdateBank(bankStatus);
+    }
+
+    private ResponseEntity<?> saveOrUpdateBank(BankStatus bankStatus) {
         if (bankStatus == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
             //check if exist
-            BankStatus bankStatusDB = bankDao.findByLatXAndLatY(bankStatus.getLatX(), bankStatus.getLatY());
+            BankStatus bankStatusDB = bankDao.findByMapId(bankStatus.getMapId());
             if (bankStatusDB == null) {
                 dataAccess.create(bankStatus);
             } else {
@@ -79,6 +82,15 @@ public class BankResource extends RestBaseResource {
         }
     }
 
+    @RequestMapping(value = "/creates", method = RequestMethod.POST)
+    public ResponseEntity<?> createBanks(RequestEntity<List<BankStatus>> requestEntity) {
+        List<BankStatus> bankStatuses = requestEntity.getBody();
+        for (BankStatus bankStatus : bankStatuses) {
+            saveOrUpdateBank(bankStatus);
+        }
+        return new ResponseEntity<>(bankStatuses, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<?> updateBank(RequestEntity<BankStatus> requestEntity) {
         final BankStatus bankStatus = requestEntity.getBody();
@@ -86,7 +98,7 @@ public class BankResource extends RestBaseResource {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            final BankStatus bankStatusFromDB = bankDao.findByLatXAndLatY(bankStatus.getLatX(), bankStatus.getLatY());
+            final BankStatus bankStatusFromDB = bankDao.findByMapId(bankStatus.getMapId());
             if (bankStatusFromDB != null) {
                 bankStatus.setId(bankStatusFromDB.getId());
                 dataAccess.update(bankStatus);

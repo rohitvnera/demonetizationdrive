@@ -3,9 +3,11 @@ jQuery(function($) {'use strict',
 
 	//#main-slider
 	$(function(){
-		$('#main-slider.carousel').carousel({
-			interval: 8000
-		});
+		$.getJSON('https://geoip-db.com/json/geoip.php?jsonp=?') 
+         .done (function(location)
+         {
+             $('#address').val(location.city+", "+location.state+", "+location.country_name);               
+         });
 		 $('#address_submit').on('click',showMap);
 		 $('#okBtn').on('click',onOk);
 		// bankDuniya code starting
@@ -14,8 +16,7 @@ jQuery(function($) {'use strict',
             $('#'+$(this).attr('id')).prop( "checked", true );
             search_types(map.getCenter());
         });
-        $('#updateBankButton').on('click', onUpdateModal);
-        
+        $('#updateBankButton').on('click', onUpdateModal);        
 	});
 
 
@@ -79,11 +80,10 @@ jQuery(function($) {'use strict',
 		social_tools: false
 	});	
 
-
 	var map;
     var infowindow;
     var markersArray = [];
-    var pyrmont = new google.maps.LatLng(18.5333, 73.8667);
+    var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
     var marker;
     var geocoder = new google.maps.Geocoder();
     var infowindow = new google.maps.InfoWindow();

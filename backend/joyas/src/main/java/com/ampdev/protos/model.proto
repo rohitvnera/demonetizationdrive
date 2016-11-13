@@ -1,0 +1,12 @@
+package com.ampdev.protos;
+
+option java_package = "com.ampdev.protos";
+option java_outer_classname = "FeedInputProtos";
+
+message FeedInput {
+    required int32 userId = 1;
+    required int32 categoryId = 2;
+    required int32 newspaperId = 3;
+    required string rssFeedUrl = 4;
+    optional int32 subcategoryId = 5;
+}

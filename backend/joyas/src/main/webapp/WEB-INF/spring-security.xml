@@ -1,0 +1,96 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+
+	<http pattern="/ws/login" security="none" />
+	<http pattern="/ws/signup" security="none" />
+	<http pattern="/ws/test" security="none" />
+	<http pattern="/ws/social/fb/login" security="none" />
+	<http pattern="/ws/social/fb/signup" security="none" />
+	<http pattern="/ws/movie/getrecentupcoming" security="none" />
+	<http pattern="/ws/movie/getrecent" security="none" />
+	<http pattern="/ws/movie/getupcoming" security="none" />
+	<http pattern="/ws/movie/getrecentupcoming/ids" security="none" />
+	<http pattern="/ws/omdbmovie/getmovies/**" security="none" />
+	<http pattern="/ws/movie/getmovies/**" security="none" />
+	<http pattern="/ws/movie/critic/review/movie/**" security="none" />
+	<http pattern="/ws/omdbmovie/recent/**" security="none" />
+	<http pattern="/ws/omdbmovie/upcoming/**" security="none" />
+	<http pattern="/ws/omdbmovie/recentupcoming/**" security="none" />
+	<http pattern="/ws/event/friend/**" security="none" />
+	<http pattern="/ws/news/**" security="none" />
+	<http pattern="/ws/file/" security="none" />
+	<http pattern="/ws/file/**" security="none" />
+	<http pattern="/ws/tictactoe/**" security="none" />
+	<http pattern="/ws/tictactoe/user/login"  security="none"/>
+	<http pattern="/ws/tictactoe/**/add"  authentication-manager-ref="authenticationManager"
+		  entry-point-ref="restServicesEntryPoint" create-session="stateless">
+		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
+	</http>
+	<http pattern="/ws/tictactoe/**/update" authentication-manager-ref="authenticationManager"
+		  entry-point-ref="restServicesEntryPoint" create-session="stateless">
+		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
+	</http>
+	<http pattern="/ws/findbank/bank/loc" security="none" />
+	<http pattern="/ws/**" authentication-manager-ref="authenticationManager"
+		entry-point-ref="restServicesEntryPoint" create-session="stateless">
+		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
+	</http>
+
+	<!-- Entry point for REST service. -->
+	<beans:bean id="restServicesEntryPoint"
+		class="com.ampdev.platform.framework.rest.security.RestAuthenticationEntryPoint" />
+
+	<!-- Filter for REST services. -->
+	<beans:bean id="restServicesFilter"
+		class="com.ampdev.platform.framework.rest.security.RestUsernamePasswordAuthenticationFilter">
+		<beans:property name="postOnly" value="false" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="authenticationSuccessHandler"
+			ref="restServicesSuccessHandler" />
+	</beans:bean>
+
+	<!-- A handler for successful REST service authentication. -->
+	<beans:bean id="restServicesSuccessHandler"
+		class="com.ampdev.platform.framework.rest.security.RestAuthenticationSuccessHandler" />
+
+	<!-- Security configuration for other resources. Use login form. -->
+	<!-- <http use-expressions="true" create-session="always"> <intercept-url 
+		pattern="/**" access="isAuthenticated()" /> <form-login login-page="/security/login.html?project=sample-project" 
+		authentication-failure-url="/security/login.html?project=sample-project&amp;error=true" 
+		/> <logout logout-success-url="/security/login.html?project=sample-project" 
+		/> </http> -->
+
+	<!-- Authentication manager. -->
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider>
+			<user-service>
+				<user name="avinash" password="ampdev" authorities="ROLE_ADMIN" />
+				<user name="sanyam" password="ampdev" authorities="ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+
+	<global-method-security secured-annotations="enabled"
+		jsr250-annotations="enabled" pre-post-annotations="enabled">
+	</global-method-security>
+
+	<!-- Token validation -->
+	<!-- Filter for REST services. -->
+	<beans:bean id="restTokenServicesFilter"
+		class="com.ampdev.platform.framework.rest.security.token.TokenAuthenticationFilter">
+		<beans:property name="authenticationService" ref="authenticationService" />
+		<beans:property name="logoutLink" value="/logout" />
+	</beans:bean>
+
+
+
+	<beans:bean id="authenticationService"
+		class="com.ampdev.platform.framework.rest.security.AuthenticationServiceDefault">
+	</beans:bean>
+
+</beans:beans>

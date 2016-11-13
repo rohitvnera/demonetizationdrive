@@ -1,0 +1,13 @@
+feedInput {
+    userId: 1
+    categoryId: 1
+    newspaperId: 1
+    rssFeedUrl: "https://news.google.com/news?cf=all&hl=en&pz=1&ned=in&output=rss"
+}
+
+feedInput {
+    userId: 2
+    categoryId: 2
+    newspaperId: 2
+    rssFeedUrl: "https://news.google.com/news?cf=all&hl=en&pz=1&ned=in&output=rss"
+}

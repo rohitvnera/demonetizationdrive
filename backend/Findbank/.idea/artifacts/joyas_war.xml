@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="joyas:war">
+    <output-path>$PROJECT_DIR$/../joyas/target</output-path>
+    <root id="archive" name="moviereview.war">
+      <element id="artifact" artifact-name="joyas:war exploded" />
+    </root>
+  </artifact>
+</component>

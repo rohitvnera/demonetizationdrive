@@ -35,7 +35,8 @@
 		  entry-point-ref="restServicesEntryPoint" create-session="stateless">
 		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
 	</http>
-	<http pattern="/ws/findbank/bank/loc" security="none" />
+	<http pattern="/ws/findbank/loc" security="none" />
+	<http pattern="/ws/findbank/ids" security="none" />
 	<http pattern="/ws/**" authentication-manager-ref="authenticationManager"
 		entry-point-ref="restServicesEntryPoint" create-session="stateless">
 		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />

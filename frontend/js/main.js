@@ -3,7 +3,7 @@ jQuery(function($) {
     var map;
     var infoWindow;
     var markersArray = [];
-    var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
+    var pyrmont = new google.maps.LatLng(18.5204303, 73.8567437);
     var marker;
     var geocoder = new google.maps.Geocoder();
 

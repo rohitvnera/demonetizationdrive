@@ -388,10 +388,10 @@ jQuery(function($) {
                     
                 
                 } else {
-                    alert("No results found");
+                   // alert("No results found");
                 }
             } else {
-                alert("Geocoder failed due to: " + status);
+             //   alert("Geocoder failed due to: " + status);
             }
         });                
     }   

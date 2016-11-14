@@ -19,6 +19,13 @@ jQuery(function($) {
         });
         $('#updateBankButton').on('click', onUpdateModal);
 
+         $('#address').keypress(function(e){
+        if(e.which == 13) {
+          //dosomething
+          e.preventDefault();
+          showMap();
+        }});
+
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');
         var $portfolio = $('.portfolio-items');
@@ -35,7 +42,6 @@ jQuery(function($) {
             return false;
         });
     });
-
 
     // accordian
     $('.accordion-toggle').on('click', function(){

@@ -108,7 +108,18 @@ jQuery(function($) {
 
         if(placeData){
             var type = placeData.type;
-            var status = [-1,0].indexOf(placeData.cashAvailable)!= -1? "unavble" :"avble";
+             var status = "";
+            switch(placeData.cashAvailable){
+                case -1:
+                    status = "no_info";
+                    break;
+                case  0:
+                    status = "unavble";
+                    break;
+                case 1:
+                    status = "avble";
+                    break;
+            }
             var icon = "images/bank_duniya_img/"+type+"_"+status+".png";
         } 
         var placeLoc = place.geometry.location;
@@ -392,10 +403,10 @@ jQuery(function($) {
                     
                 
                 } else {
-                   // alert("No results found");
+                    alert("No results found");
                 }
             } else {
-             //   alert("Geocoder failed due to: " + status);
+                alert("Geocoder failed due to: " + status);
             }
         });                
     }   

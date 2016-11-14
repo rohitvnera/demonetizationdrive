@@ -186,7 +186,7 @@ jQuery(function($) {
         if(type.length){
             var request = {
                 location: latLng,
-                radius: 2000,
+                radius: 5000,
                 types: [type] //e.g. school, restaurant,bank,bar,city_hall,gym,night_club,park,zoo
             };
            

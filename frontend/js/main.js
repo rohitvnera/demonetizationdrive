@@ -74,7 +74,8 @@ jQuery(function($) {
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,
-            zoom: 15
+            zoom: 15,
+            mapTypeControl: false
         });
         //infoWindow = new google.maps.InfoWindow({map: map});
 

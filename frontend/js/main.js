@@ -12,7 +12,7 @@ jQuery(function($) {
         firstLoad();
         $('#address_submit').on('click', function() {showMap();});
         $('#okBtn').on('click', onOk);
-        $('.chkbox').click(function () {
+        $('.controls').click(function () {
             $(':checkbox').attr('checked', false);
             $('#' + $(this).attr('id')).prop("checked", true);
             search_types(map.getCenter());
@@ -145,9 +145,6 @@ jQuery(function($) {
         });
        
     }
-    var source="";
-    var dest='';
-    
     
     function search_types(latLng){
         clearOverlays(); 
@@ -157,7 +154,7 @@ jQuery(function($) {
         }
         
         var type = [];
-        $('.chkbox:checked').each(function( index , val ) {
+        $('input[type=radio]:checked').each(function( index , val ) {
                             type.push(val.id);                            
                         });
         var icon = "images/bank_duniya_img/"+type+".png";

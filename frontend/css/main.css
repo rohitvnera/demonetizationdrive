@@ -265,8 +265,8 @@ input.search-form:hover {
 .navbar {
   border-radius: 0;
   margin-bottom: 0;
-  background: #151515;
-  padding: 15px 0;
+  background: #192849;
+  padding: 0px 0;
   padding-bottom: 0;
 }
 
@@ -276,7 +276,7 @@ input.search-form:hover {
 
 .navbar-nav>li{
   margin-left: 35px;
-  padding-bottom: 28px;
+  padding-bottom: 10px;
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -289,7 +289,7 @@ input.search-form:hover {
 }
 
 .navbar-inverse .navbar-nav > li > a:hover{
-	background-color: #c52d2f;
+	background-color: #379797;
   color: #fff;
 }
 
@@ -309,7 +309,7 @@ input.search-form:hover {
 .navbar-inverse .navbar-nav > .open > a,
 .navbar-inverse .navbar-nav > .open > a:hover,
 .navbar-inverse .navbar-nav > .open > a:focus {
-  background-color: #c52d2f;
+  background-color: #3975c0;
   color: #fff;
 }
 
@@ -2563,7 +2563,7 @@ shortcodes page css
 #type-selector {
   color: #fff;
   background-color: #4d90fe;
-  padding: 5px 11px 0px 11px;
+  padding: 4px 11px 0px 11px;
   display: inline-block;
 }
 

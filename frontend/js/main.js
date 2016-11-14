@@ -10,7 +10,6 @@ jQuery(function($) {
 
     $(function(){
         firstLoad();
-        $('#address_submit').on('click', function() {showMap();});
         $('#okBtn').on('click', onOk);
         $('#updateBankButton').on('click', onUpdateModal);
 
@@ -19,6 +18,7 @@ jQuery(function($) {
           //dosomething
           e.preventDefault();
           showMap();
+          $("#address").blur(); 
         }});
 
          $('input[type=radio][name=type]').on('change', function() {

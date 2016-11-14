@@ -22,7 +22,7 @@ public interface BankDao extends PagingAndSortingRepository<BankStatus, Long> {
                                         @Param("latY") String latY);
 
     @Query("SELECT c FROM BankStatus c WHERE (c.mapId = :mapId)")
-    public BankStatus findByMapId(@Param("mapId") String mapId);
+    public List<BankStatus> findByMapId(@Param("mapId") String mapId);
 
     @Query("SELECT c FROM BankStatus c WHERE ((c.mapId in (:mapId)))")
     public List<BankStatus> findByMapIds(@Param("mapId") List<String> mapId);

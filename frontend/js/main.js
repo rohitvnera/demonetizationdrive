@@ -184,7 +184,7 @@ jQuery(function($) {'use strict',
 	                debugger;
 	                var dataToSave = saveMapData(results);
 	                $.ajax({
-					  url: 'https://staging.indiafindbank.in/api/findbank/ws/findbank/creates',
+					  url: '/api/findbank/ws/findbank/creates',
 					  type:'POST',
 					 // crossDomain: true,
 				      dataType: 'json',
@@ -192,7 +192,7 @@ jQuery(function($) {'use strict',
 					  contentType: 'application/json',
 					  success: function(result){
 						  	debugger;
-						  	 $.ajax({url: "https://staging.indiafindbank.in/api/findbank/ws/findbank/ids",
+						  	 $.ajax({url: "/api/findbank/ws/findbank/ids",
 					        //crossDomain: true,
 					        type:'POST',
 					        dataType: 'json',

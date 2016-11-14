@@ -71,8 +71,8 @@ public class BankResource extends RestBaseResource {
         }
         try {
             //check if exist
-            BankStatus bankStatusDB = bankDao.findByMapId(bankStatus.getMapId());
-            if (bankStatusDB == null) {
+            List<BankStatus> banks = bankDao.findByMapId(bankStatus.getMapId());
+            if (Util.isEmpty(banks)) {
                 dataAccess.create(bankStatus);
             } else {
                 System.out.println(String.format("Bank with id %s at location (%s,%s) alread exists",
@@ -101,21 +101,18 @@ public class BankResource extends RestBaseResource {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            final BankStatus bankStatusFromDB = bankDao.findByMapId(bankStatus.getMapId());
-            if (bankStatusFromDB != null) {
+            final List<BankStatus> banks = bankDao.findByMapId(bankStatus.getMapId());
+            if (!Util.isEmpty(banks)) {
+                BankStatus bankStatusFromDB = banks.get(0);
                 bankStatus.setId(bankStatusFromDB.getId());
                 dataAccess.update(bankStatus);
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(String.format("Entity with name %d at location (%s,%s) doesn't exist",
-                        bankStatusFromDB.getName(), bankStatusFromDB.getLatX(), bankStatus.getLatY()),
-                        HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>(String.format(ERROR, "Entity doesn't exist"), HttpStatus.OK);
             }
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(String.format("Error updating bank with name %d at location (%s,%s) doesn't exist",
-                    bankStatus.getName(), bankStatus.getLatX(), bankStatus.getLatY()),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(String.format(ERROR, "Error in updating"), HttpStatus.OK);
         }
     }
 
@@ -126,28 +123,30 @@ public class BankResource extends RestBaseResource {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            final BankStatus bankStatusFromDB = bankDao.findByMapId(bankStatus.getMapId());
-            if (bankStatusFromDB != null) {
-                bankStatusFromDB.setCashAvailable(bankStatus.getCashAvailable());
-                if (bankStatus.getCashAvailable() == 1) {
-                    bankStatusFromDB.setAvgWaitTime(bankStatus.getAvgWaitTime());
-                } else {
-                    bankStatusFromDB.setAvgWaitTime(-1);
-                    bankStatusFromDB.setNextAvailabilty(bankStatus.getNextAvailabilty());
-                }
-                dataAccess.update(bankStatusFromDB);
-                return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+            final List<BankStatus> banks = bankDao.findByMapId(bankStatus.getMapId());
+            if (Util.isEmpty(banks)) {
+                return new ResponseEntity<>(String.format(ERROR, "Entity doesn't exist"), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(String.format("Entity with name %d at location (%s,%s) doesn't exist",
-                        bankStatusFromDB.getName(), bankStatusFromDB.getLatX(), bankStatus.getLatY()),
-                        HttpStatus.BAD_REQUEST);
+                final BankStatus bankStatusFromDB = banks.get(0);
+                if (bankStatusFromDB != null) {
+                    bankStatusFromDB.setCashAvailable(bankStatus.getCashAvailable());
+                    if (bankStatus.getCashAvailable() == 1) {
+                        bankStatusFromDB.setAvgWaitTime(bankStatus.getAvgWaitTime());
+                    } else {
+                        bankStatusFromDB.setAvgWaitTime(-1);
+                        bankStatusFromDB.setNextAvailabilty(bankStatus.getNextAvailabilty());
+                    }
+                    dataAccess.update(bankStatusFromDB);
+                    return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+                }
             }
+
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(String.format("Error updating bank with name %d at location (%s,%s) doesn't exist",
-                    bankStatus.getName(), bankStatus.getLatX(), bankStatus.getLatY()),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(String.format(ERROR, "Error in updating"), HttpStatus.OK);
         }
+
+        return new ResponseEntity<>(String.format(ERROR, "Entity doesn't exist"), HttpStatus.OK);
     }
 
 

@@ -106,16 +106,16 @@ jQuery(function($) {
             var type = placeData.type;
             var status = [-1,0].indexOf(placeData.cashAvailable)!= -1? "unavble" :"avble";
             var icon = "images/bank_duniya_img/"+type+"_"+status+".png";
-        }
+        } 
         var placeLoc = place.geometry.location;
         var marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
             icon: icon,
-            visible:true
-
+            visible:true  
+            
         });
-
+        
         markersArray.push(marker);
         var infoNotAvbl = "Information not available";
         var  markerContent = "<b>Name:</b>"+place.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
@@ -137,32 +137,32 @@ jQuery(function($) {
             currentMarkerId['nextAvailabilty'] = placeData.nextAvailabilty;
             onUpdateModal();
         });
-
+       
     }
     var source="";
     var dest='';
-
-
+    
+    
     function search_types(latLng){
-        clearOverlays();
-
+        clearOverlays(); 
+      
         if(!latLng){
             latLng = pyrmont;
         }
-
+        
         var type = [];
         $('.chkbox:checked').each(function( index , val ) {
-                            type.push(val.id);
+                            type.push(val.id);                            
                         });
         var icon = "images/bank_duniya_img/"+type+".png";
-
+        
         if(type.length){
             var request = {
                 location: latLng,
                 radius: 2000,
                 types: [type] //e.g. school, restaurant,bank,bar,city_hall,gym,night_club,park,zoo
             };
-
+           
             var service = new google.maps.places.PlacesService(map);
             service.search(request, function(results, status) {
                 map.setZoom(15);
@@ -176,26 +176,21 @@ jQuery(function($) {
                         atmBankMap[results[i].id ] =  results[i];
                         mapList.push({'id' : results[i].id});
                     }
-                    //debugger;
                     var dataToSave = saveMapData(results);
                     $.ajax({
                       url: '/api/findbank/ws/findbank/creates',
                       type:'POST',
-                     // crossDomain: true,
                       dataType: 'json',
                       data: JSON.stringify(dataToSave),
                       contentType: 'application/json',
                       success: function(result){
-                           // debugger;
-                             $.ajax({url: "/api/findbank/ws/findbank/ids",
-                            //crossDomain: true,
+                            $.ajax({url: "/api/findbank/ws/findbank/ids",
                             type:'POST',
                             dataType: 'json',
                             data:JSON.stringify(mapList),
                             contentType: 'application/json',
                             success: function(response){
                                 for (var i = 0; i < response.length; i++) {
-                                    //debugger;
                                     atmBankMap[response[i].mapId].html_attributions='';
                                     createMarker(atmBankMap[response[i].mapId], icon, response[i]);
                                 }
@@ -319,14 +314,18 @@ jQuery(function($) {
                 if (results[0]) {
                     map.setZoom(15);
                     map.setCenter(latlng);
-                    marker = new google.maps.Marker({
-                        position: latlng,
-                        map: map,
-                        icon: markerImage,
-                        draggable: true ,
-                        animation: google.maps.Animation.DROP,
-
-                    });
+                    if(!marker){
+                        marker = new google.maps.Marker({
+                            position: latlng, 
+                            map: map,
+                            icon: markerImage,
+                            draggable: true ,
+                            animation: google.maps.Animation.DROP,
+                            
+                        }); 
+                    }else{
+                        marker.setPosition(latlng);
+                    }
                     $('#btn').hide();
                     $('#latitude,#longitude').show();
                     $('#address').val(results[0].formatted_address);
@@ -361,7 +360,7 @@ jQuery(function($) {
                         });
                     });
 
-                    map.addListener('center_changed', function(event) {
+                    map.addListener('dragend', function(event) {
                        // debugger;
                         marker.setPosition(map.getCenter())
                         search_types(map.getCenter());

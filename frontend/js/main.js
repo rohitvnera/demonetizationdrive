@@ -49,28 +49,28 @@ jQuery(function($) {
     //Initiat WOW JS
     new WOW().init();
 
-    
+
     //goto top
     $('.gototop').click(function(event) {
         event.preventDefault();
         $('html, body').animate({
             scrollTop: $("body").offset().top
         }, 500);
-    }); 
+    });
 
     //Pretty Photo
     $("a[rel^='prettyPhoto']").prettyPhoto({
         social_tools: false
-    }); 
+    });
 
-    // var waypoints = [];                  
+    // var waypoints = [];
     function firstLoad() {
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,
             zoom: 15
         });
-        infoWindow = new google.maps.InfoWindow({map: map});
+        //infoWindow = new google.maps.InfoWindow({map: map});
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -80,17 +80,16 @@ jQuery(function($) {
                     lng: position.coords.longitude
                 };
 
-                infoWindow.setPosition(pos);
-                //infoWindow.setContent('Location found.');
+                //infoWindow.setPosition(pos);
                 map.setCenter(pos);
                 showMap(pos);
             }, function() {
-                handleLocationError(true, infoWindow, map.getCenter());
+                //handleLocationError(true, //infoWindow, map.getCenter());
                 showMap();
             });
         } else {
             // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
+            //handleLocationError(false, //infoWindow, map.getCenter());
             showMap();
         }
        }
@@ -107,16 +106,16 @@ jQuery(function($) {
             var type = placeData.type;
             var status = [-1,0].indexOf(placeData.cashAvailable)!= -1? "unavble" :"avble";
             var icon = "images/bank_duniya_img/"+type+"_"+status+".png";
-        } 
+        }
         var placeLoc = place.geometry.location;
         var marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
             icon: icon,
-            visible:true  
-            
+            visible:true
+
         });
-        
+
         markersArray.push(marker);
         var infoNotAvbl = "Information not available";
         var  markerContent = "<b>Name:</b>"+place.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
@@ -129,8 +128,8 @@ jQuery(function($) {
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
 
         google.maps.event.addListener(marker, 'click', function() {
-            infoWindow.setContent(markerContent);
-            infoWindow.open(map, this);
+            //infoWindow.setContent(markerContent);
+            //infoWindow.open(map, this);
             //debugger;
             currentMarkerId['mapId'] = placeData.mapId;
             currentMarkerId['cashAvailable'] = placeData.cashAvailable;
@@ -138,32 +137,32 @@ jQuery(function($) {
             currentMarkerId['nextAvailabilty'] = placeData.nextAvailabilty;
             onUpdateModal();
         });
-       
+
     }
     var source="";
     var dest='';
-    
-    
+
+
     function search_types(latLng){
-        clearOverlays(); 
-      
+        clearOverlays();
+
         if(!latLng){
             latLng = pyrmont;
         }
-        
+
         var type = [];
         $('.chkbox:checked').each(function( index , val ) {
-                            type.push(val.id);                            
+                            type.push(val.id);
                         });
         var icon = "images/bank_duniya_img/"+type+".png";
-        
+
         if(type.length){
             var request = {
                 location: latLng,
                 radius: 2000,
                 types: [type] //e.g. school, restaurant,bank,bar,city_hall,gym,night_club,park,zoo
             };
-           
+
             var service = new google.maps.places.PlacesService(map);
             service.search(request, function(results, status) {
                 map.setZoom(15);
@@ -203,18 +202,18 @@ jQuery(function($) {
                             }});
                       }
                     });
-                   
+
                 }
             });
         }
      }
 
     function onUpdateBank(){
-        
+
     }
 
     function saveMapData(dataList){
-        
+
         if(dataList.length > 0){
         var mapDataList = [];
         for (var i = 0; i < dataList.length; i++) {
@@ -254,7 +253,7 @@ jQuery(function($) {
             //markersArray.length = 0;
         }
     }
-    
+
     function clearMarkers(){
         $('#show_btn').show();
         $('#hide_btn').hide();
@@ -267,7 +266,7 @@ jQuery(function($) {
             for (i in markersArray) {
                 markersArray[i].setVisible(true)
             }
-             
+
         }
     }
     function onOk(){
@@ -294,12 +293,12 @@ jQuery(function($) {
                 }});
     }
 
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-            'Error: The Geolocation service failed.' :
-            'Error: Your browser doesn\'t support geolocation.');
-    }
+    //function handleLocationError(browserHasGeolocation, //infoWindow, pos) {
+        //infoWindow.setPosition(pos);
+        //infoWindow.setContent(browserHasGeolocation ?
+        //    'Error: The Geolocation service failed.' :
+        //    'Error: Your browser doesn\'t support geolocation.');
+    //};
 
     function showMap(inputLatLong){
         var locationData = {};
@@ -321,29 +320,29 @@ jQuery(function($) {
                     map.setZoom(15);
                     map.setCenter(latlng);
                     marker = new google.maps.Marker({
-                        position: latlng, 
+                        position: latlng,
                         map: map,
                         icon: markerImage,
                         draggable: true ,
                         animation: google.maps.Animation.DROP,
-                        
-                    }); 
+
+                    });
                     $('#btn').hide();
                     $('#latitude,#longitude').show();
                     $('#address').val(results[0].formatted_address);
                     $('#latitude').val(marker.getPosition().lat());
                     $('#longitude').val(marker.getPosition().lng());
-                    infoWindow.setContent(results[0].formatted_address);
-                    infoWindow.open(map, marker);
+                    //infoWindow.setContent(results[0].formatted_address);
+                    //infoWindow.open(map, marker);
                     search_types(marker.getPosition());
                     google.maps.event.addListener(marker, 'click', function() {
-                        infoWindow.open(map,marker);
-                        
+                        //infoWindow.open(map,marker);
+
                     });
-                
-                
+
+
                     google.maps.event.addListener(marker, 'dragend', function() {
-                      
+
                         geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
                             if (status == google.maps.GeocoderStatus.OK) {
                                 if (results[0]) {
@@ -353,11 +352,11 @@ jQuery(function($) {
                                     $('#latitude').val(marker.getPosition().lat());
                                     $('#longitude').val(marker.getPosition().lng());
                                 }
-                                
-                                infoWindow.setContent(results[0].formatted_address);
+
+                                //infoWindow.setContent(results[0].formatted_address);
                                 var centralLatLng = marker.getPosition();
                                 search_types(centralLatLng);
-                                infoWindow.open(map, marker);
+                                //infoWindow.open(map, marker);
                             }
                         });
                     });

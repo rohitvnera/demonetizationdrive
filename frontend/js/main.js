@@ -159,9 +159,22 @@ jQuery(function($) {
         }
         
         var type = [];
-        $('.chkbox:checked').each(function( index , val ) {
-                            type.push(val.id);                            
+        var typeOption = "";
+        debugger;
+        $('input[name="type"]:checked').each(function( index , val ) {
+                            typeOption = val.id;                            
                         });
+        switch(typeOption){
+            case 'bank':
+                type = ['bank'];
+                break;
+            case  'atm':
+                type = ['atm'];
+                break;
+            case 'changetype_all':
+                type = ['bank', 'atm'];
+                break;
+        }
         var icon = "images/bank_duniya_img/"+type+".png";
         
         if(type.length){

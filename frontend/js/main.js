@@ -126,13 +126,13 @@ jQuery(function($) {'use strict',
         
         markersArray.push(marker);
         var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name:</b>"+place.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
+        var  markerContent = "<b>Name: </b>"+place.name+"<br><b>Cash Status: </b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
         if(placeData.cashAvailable != 1){
         	markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? placeData.nextAvailabilty : infoNotAvbl)+"<br>";
         }else{
-        	markerContent += "<b>Average Waiting Time : </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
+        	markerContent += "<b>Average Waiting Time: </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
         }
-        markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
+        markerContent += "<b>Address: </b>"+placeData.address+"<br><b> Status: </b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
 
         google.maps.event.addListener(marker, 'click', function() {
@@ -187,7 +187,7 @@ jQuery(function($) {'use strict',
 	                debugger;
 	                var dataToSave = saveMapData(results);
 	                $.ajax({
-					  url: 'https://staging.indiafindbank.in/api/findbank/ws/findbank/creates',
+					  url: '/api/findbank/ws/findbank/creates',
 					  type:'POST',
 					 // crossDomain: true,
 				      dataType: 'json',
@@ -195,7 +195,7 @@ jQuery(function($) {'use strict',
 					  contentType: 'application/json',
 					  success: function(result){
 						  	debugger;
-						  	 $.ajax({url: "https://staging.indiafindbank.in/api/findbank/ws/findbank/ids",
+						  	 $.ajax({url: "/api/findbank/ws/findbank/ids",
 					        //crossDomain: true,
 					        type:'POST',
 					        dataType: 'json',
@@ -292,7 +292,7 @@ jQuery(function($) {'use strict',
 			"nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
 			  "mapId" : markerId
 			};
-    	$.ajax({url: "https://staging.indiafindbank.in/api/findbank/ws/findbank/update2",
+    	$.ajax({url: "/api/findbank/ws/findbank/update2",
 		        //crossDomain: true,
 		        type:'PUT',
 		        dataType: 'json',

@@ -2579,3 +2579,12 @@ shortcodes page css
   position: relative;
   z-index: 10;
 }
+
+h1 {
+  font-size: 20px;
+  float: left;
+  z-index: 10;
+  position: relative;
+  color: aliceblue;
+  padding-left: 200px;
+}

@@ -108,7 +108,8 @@ jQuery(function($) {
      function onUpdateModal(){
         var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
         var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : 29));
-        var nextAvblTime = $("#nxtAvblDateTime").val((currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']) : new Date()));
+        var nextAvblTime = currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']).toISOString() : new Date().toISOString();
+        $("#nxtAvblDateTime").val(nextAvblTime.substr(0, maxDate.indexOf('.')));
 
         if(Number(currentMarkerId['cashAvailable']) != 1){
             $('#avgWaitTimeDiv').hide();

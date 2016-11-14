@@ -12,7 +12,7 @@ jQuery(function($) {
         firstLoad();
         $('#address_submit').on('click', function() {showMap();});
         $('#okBtn').on('click', onOk);
-        $('.controls').click(function () {
+        $('.chkbox').click(function () {
             $(':checkbox').attr('checked', false);
             $('#' + $(this).attr('id')).prop("checked", true);
             search_types(map.getCenter());
@@ -132,10 +132,12 @@ jQuery(function($) {
         }
         markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
-
+        if(!infoWindow){
+            infoWindow = new google.maps.InfoWindow({map: map});
+        }
         google.maps.event.addListener(marker, 'click', function() {
-            //infoWindow.setContent(markerContent);
-            //infoWindow.open(map, this);
+            infoWindow.setContent(markerContent);
+            infoWindow.open(map, this);
             //debugger;
             currentMarkerId['mapId'] = placeData.mapId;
             currentMarkerId['cashAvailable'] = placeData.cashAvailable;
@@ -145,6 +147,9 @@ jQuery(function($) {
         });
        
     }
+    var source="";
+    var dest='';
+    
     
     function search_types(latLng){
         clearOverlays(); 
@@ -154,7 +159,7 @@ jQuery(function($) {
         }
         
         var type = [];
-        $('input[type=radio]:checked').each(function( index , val ) {
+        $('.chkbox:checked').each(function( index , val ) {
                             type.push(val.id);                            
                         });
         var icon = "images/bank_duniya_img/"+type+".png";
@@ -363,7 +368,7 @@ jQuery(function($) {
                         });
                     });
 
-                    map.addListener('dragend', function(event) {
+                    map.addListener('idle', function(event) {
                        // debugger;
                         marker.setPosition(map.getCenter())
                         search_types(map.getCenter());

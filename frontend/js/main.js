@@ -3,20 +3,23 @@ jQuery(function($) {'use strict',
 
 	//#main-slider
 	$(function(){
-		$.getJSON('https://geoip-db.com/json/geoip.php?jsonp=?') 
-         .done (function(location)
-         {
-             $('#address').val(location.city+", "+location.state+", "+location.country_name);               
-         });
-		 $('#address_submit').on('click',showMap);
-		 $('#okBtn').on('click',onOk);
-		// bankDuniya code starting
-		$('.chkbox').click(function(){
-            $(':checkbox').attr('checked',false);
-            $('#'+$(this).attr('id')).prop( "checked", true );
-            search_types(map.getCenter());
-        });
-        $('#updateBankButton').on('click', onUpdateModal);        
+        var dontCheckLocation = sessionStorage.dontCheckLocation;
+        if(dontCheckLocation) {
+            $.getJSON('https://geoip-db.com/json/geoip.php?jsonp=?') 
+                 .done (function(location)
+                 {
+                     $('#address').val(location.city+", "+location.state+", "+location.country_name);               
+                 });
+                 $('#address_submit').on('click',showMap);
+                 $('#okBtn').on('click',onOk);
+                // bankDuniya code starting
+                $('.chkbox').click(function(){
+                    $(':checkbox').attr('checked',false);
+                    $('#'+$(this).attr('id')).prop( "checked", true );
+                    search_types(map.getCenter());
+                });
+                $('#updateBankButton').on('click', onUpdateModal);       
+        } 
 	});
 
 
@@ -142,13 +145,13 @@ jQuery(function($) {'use strict',
         
         markersArray.push(marker);
         var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name:</b>"+place.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
+        var  markerContent = "<b>Name: </b>"+place.name+"<br><b>Cash Status: </b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
         if(placeData.cashAvailable != 1){
         	markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? placeData.nextAvailabilty : infoNotAvbl)+"<br>";
         }else{
-        	markerContent += "<b>Average Waiting Time : </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
+        	markerContent += "<b>Average Waiting Time: </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
         }
-        markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
+        markerContent += "<b>Address: </b>"+placeData.address+"<br><b> Status: </b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
 
         google.maps.event.addListener(marker, 'click', function() {
@@ -350,6 +353,7 @@ jQuery(function($) {'use strict',
                     $('#address').val(results[0].formatted_address);
                     $('#latitude').val(marker.getPosition().lat());
                     $('#longitude').val(marker.getPosition().lng());
+                    sessionStorage.dontCheckLocation = "true";
                     infowindow.setContent(results[0].formatted_address);
                     infowindow.open(map, marker);
                     search_types(marker.getPosition());

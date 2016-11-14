@@ -161,7 +161,6 @@ jQuery(function($) {
         
         var type = [];
         var typeOption = "";
-        debugger;
         $('input[name="type"]:checked').each(function( index , val ) {
                             typeOption = val.id;                            
                         });

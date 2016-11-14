@@ -306,7 +306,7 @@ jQuery(function($) {
 
     function showMap(inputLatLong){
         var locationData = {};
-        var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png&key=AIzaSyCJG1h0f41Jv3RRZz6ZjzpnUfLBFJDt8zQ';
+        var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
         var markerImage = new google.maps.MarkerImage(imageUrl,new google.maps.Size(24, 32));
         if (!inputLatLong) {
             var addresFromSearch = $('#address').val();

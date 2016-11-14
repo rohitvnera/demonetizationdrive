@@ -81,7 +81,7 @@ jQuery(function($) {'use strict',
 	});	
 
 	var map;
-    var infowindow;
+    var infoWindow;
     var markersArray = [];
     var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
     var marker;
@@ -94,7 +94,26 @@ jQuery(function($) {'use strict',
             center: pyrmont,
             zoom: 14
         });
-        infowindow = new google.maps.InfoWindow();
+        infoWindow = new google.maps.InfoWindow({map: map});
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                infoWindow.setPosition(pos);
+                infoWindow.setContent('Location found.');
+                map.setCenter(pos);
+            }, function() {
+                handleLocationError(true, infoWindow, map.getCenter());
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
         //document.getElementById('directionsPanel').innerHTML='';
         search_types();
        }
@@ -289,7 +308,7 @@ jQuery(function($) {'use strict',
 			"nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
 			  "mapId" : markerId
 			};
-    	$.ajax({url: "https://staging.indiafindbank.in/api/findbank/ws/findbank/update2",
+    	$.ajax({url: "/api/findbank/ws/findbank/update2",
 		        //crossDomain: true,
 		        type:'PUT',
 		        dataType: 'json',
@@ -298,6 +317,13 @@ jQuery(function($) {'use strict',
 		        success: function(response){
 		            debugger;
 		        }});
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
     }
 
     function showMap(){
@@ -327,7 +353,7 @@ jQuery(function($) {'use strict',
                     infowindow.setContent(results[0].formatted_address);
                     infowindow.open(map, marker);
                     search_types(marker.getPosition());
-                    google.maps.event.addListener(marker, 'click', function() {
+                        google.maps.event.addListener(marker, 'click', function() {
                         infowindow.open(map,marker);
                         
                     });

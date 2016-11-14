@@ -3,20 +3,23 @@ jQuery(function($) {'use strict',
 
 	//#main-slider
 	$(function(){
-		$.getJSON('https://geoip-db.com/json/geoip.php?jsonp=?') 
-         .done (function(location)
-         {
-             $('#address').val(location.city+", "+location.state+", "+location.country_name);               
-         });
-		 $('#address_submit').on('click',showMap);
-		 $('#okBtn').on('click',onOk);
-		// bankDuniya code starting
-		$('.chkbox').click(function(){
-            $(':checkbox').attr('checked',false);
-            $('#'+$(this).attr('id')).prop( "checked", true );
-            search_types(map.getCenter());
-        });
-        $('#updateBankButton').on('click', onUpdateModal);        
+        var dontCheckLocation = sessionStorage.dontCheckLocation;
+        if(dontCheckLocation) {
+            $.getJSON('https://geoip-db.com/json/geoip.php?jsonp=?') 
+                 .done (function(location)
+                 {
+                     $('#address').val(location.city+", "+location.state+", "+location.country_name);               
+                 });
+                 $('#address_submit').on('click',showMap);
+                 $('#okBtn').on('click',onOk);
+                // bankDuniya code starting
+                $('.chkbox').click(function(){
+                    $(':checkbox').attr('checked',false);
+                    $('#'+$(this).attr('id')).prop( "checked", true );
+                    search_types(map.getCenter());
+                });
+                $('#updateBankButton').on('click', onUpdateModal);       
+        } 
 	});
 
 
@@ -324,6 +327,7 @@ jQuery(function($) {'use strict',
                     $('#address').val(results[0].formatted_address);
                     $('#latitude').val(marker.getPosition().lat());
                     $('#longitude').val(marker.getPosition().lng());
+                    sessionStorage.dontCheckLocation = "true";
                     infowindow.setContent(results[0].formatted_address);
                     infowindow.open(map, marker);
                     search_types(marker.getPosition());

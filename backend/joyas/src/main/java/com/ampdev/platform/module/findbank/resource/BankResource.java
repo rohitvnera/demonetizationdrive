@@ -4,8 +4,10 @@ import com.ampdev.platform.framework.dataaccess.IDataAccess;
 import com.ampdev.platform.framework.dataaccess.exception.DataAccessException;
 import com.ampdev.platform.framework.rest.RestBaseResource;
 import com.ampdev.platform.module.common.dataobject.ID;
+import com.ampdev.platform.module.common.util.Util;
 import com.ampdev.platform.module.findbank.dao.BankDao;
 import com.ampdev.platform.module.findbank.dataobject.BankStatus;
+import com.ampdev.platform.module.findbank.dataobject.Feedback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class BankResource extends RestBaseResource {
 
     private final static String SUCCESS = "{\"status\" : true}";
+    private final static String ERROR = "{\"status\": false, \"message\": \"%s\"}";
     @Autowired
     private BankDao bankDao;
 
@@ -147,4 +150,25 @@ public class BankResource extends RestBaseResource {
         }
     }
 
+
+    @RequestMapping(value = "/feedback", method = RequestMethod.POST)
+    public ResponseEntity<?> feedback(RequestEntity<Feedback> requestEntity) {
+        final Feedback feedback = requestEntity.getBody();
+        if (feedback == null) {
+            return new ResponseEntity<>(String.format(ERROR, "Feedback is null"), HttpStatus.OK);
+        } else if (Util.isEmpty(feedback.getSubject())) {
+            return new ResponseEntity<>(String.format(ERROR, "Subject can't be empty"), HttpStatus.OK);
+        } else if (Util.isEmpty(feedback.getMessage())) {
+            return new ResponseEntity<>(String.format(ERROR, "Subject can't be empty"), HttpStatus.OK);
+        }
+
+        // Crete feedback
+        try {
+
+            dataAccess.create("feedback", feedback);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(String.format(ERROR, "Error in sending feedback"), HttpStatus.OK);
+        }
+    }
 }

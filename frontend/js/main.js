@@ -181,7 +181,7 @@ jQuery(function($) {
            
             var service = new google.maps.places.PlacesService(map);
             service.search(request, function(results, status) {
-                map.setZoom(15);
+                //map.setZoom(15);
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     var mapList = [];
                     var atmBankMap = {};
@@ -325,7 +325,7 @@ jQuery(function($) {
                 var longitude = results[0].geometry.location.lng();
                 var latlng = new google.maps.LatLng(latitude, longitude);
                 if (results[0]) {
-                    map.setZoom(15);
+                   // map.setZoom(15);
                     map.setCenter(latlng);
                     if(!marker){
                         marker = new google.maps.Marker({

@@ -86,7 +86,7 @@ jQuery(function($) {'use strict',
     var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
     var marker;
     var geocoder = new google.maps.Geocoder();
-    var infowindow = new google.maps.InfoWindow();
+    var infowindow;
     // var waypoints = [];                  
     function initialize() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -353,7 +353,7 @@ jQuery(function($) {'use strict',
                     infowindow.setContent(results[0].formatted_address);
                     infowindow.open(map, marker);
                     search_types(marker.getPosition());
-                        google.maps.event.addListener(marker, 'click', function() {
+                    google.maps.event.addListener(marker, 'click', function() {
                         infowindow.open(map,marker);
                         
                     });

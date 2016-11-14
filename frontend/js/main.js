@@ -1,25 +1,39 @@
 var currentMarkerId = {};
-jQuery(function($) {'use strict',
+jQuery(function($) {
+    var map;
+    var infoWindow;
+    var markersArray = [];
+    var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
+    var marker;
+    var geocoder = new google.maps.Geocoder();
 
-	//#main-slider
+
 	$(function(){
-        var dontCheckLocation = sessionStorage.dontCheckLocation;
-        if(dontCheckLocation) {
-            $.getJSON('https://geoip-db.com/json/geoip.php?jsonp=?') 
-                 .done (function(location)
-                 {
-                     $('#address').val(location.city+", "+location.state+", "+location.country_name);               
-                 });
-                 $('#address_submit').on('click',showMap);
-                 $('#okBtn').on('click',onOk);
-                // bankDuniya code starting
-                $('.chkbox').click(function(){
-                    $(':checkbox').attr('checked',false);
-                    $('#'+$(this).attr('id')).prop( "checked", true );
-                    search_types(map.getCenter());
-                });
-                $('#updateBankButton').on('click', onUpdateModal);       
-        } 
+        firstLoad();
+        $('#address_submit').on('click', showMap);
+        $('#okBtn').on('click', onOk);
+        $('.chkbox').click(function () {
+            $(':checkbox').attr('checked', false);
+            $('#' + $(this).attr('id')).prop("checked", true);
+            search_types(map.getCenter());
+        });
+        $('#updateBankButton').on('click', onUpdateModal);
+
+
+        var $portfolio_selectors = $('.portfolio-filter >li>a');
+        var $portfolio = $('.portfolio-items');
+        $portfolio.isotope({
+            itemSelector : '.portfolio-item',
+            layoutMode : 'fitRows'
+        });
+
+        $portfolio_selectors.on('click', function(){
+            $portfolio_selectors.removeClass('active');
+            $(this).addClass('active');
+            var selector = $(this).attr('data-filter');
+            $portfolio.isotope({ filter: selector });
+            return false;
+        });
 	});
 
 
@@ -34,24 +48,6 @@ jQuery(function($) {'use strict',
 
 	//Initiat WOW JS
 	new WOW().init();
-
-	// portfolio filter
-	$(window).load(function(){'use strict';
-		var $portfolio_selectors = $('.portfolio-filter >li>a');
-		var $portfolio = $('.portfolio-items');
-		$portfolio.isotope({
-			itemSelector : '.portfolio-item',
-			layoutMode : 'fitRows'
-		});
-		
-		$portfolio_selectors.on('click', function(){
-			$portfolio_selectors.removeClass('active');
-			$(this).addClass('active');
-			var selector = $(this).attr('data-filter');
-			$portfolio.isotope({ filter: selector });
-			return false;
-		});
-	});
 
 	// Contact form
 	var form = $('#main-contact-form');
@@ -83,15 +79,8 @@ jQuery(function($) {'use strict',
 		social_tools: false
 	});	
 
-	var map;
-    var infoWindow;
-    var markersArray = [];
-    var pyrmont = new google.maps.LatLng(20.268455824834792, 85.84099235520011);
-    var marker;
-    var geocoder = new google.maps.Geocoder();
-    var infowindow;
     // var waypoints = [];                  
-    function initialize() {
+    function firstLoad() {
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,
@@ -108,21 +97,22 @@ jQuery(function($) {'use strict',
                 };
 
                 infoWindow.setPosition(pos);
-                infoWindow.setContent('Location found.');
+                //infoWindow.setContent('Location found.');
                 map.setCenter(pos);
+                showMap(pos);
             }, function() {
                 handleLocationError(true, infoWindow, map.getCenter());
+                showMap();
             });
         } else {
             // Browser doesn't support Geolocation
             handleLocationError(false, infoWindow, map.getCenter());
+            showMap();
         }
-        //document.getElementById('directionsPanel').innerHTML='';
-        search_types();
        }
 
      function onUpdateModal(){
-     	debugger;
+     	
      	var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
     	var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : -1));
     	var nextAvblTime = $("#nxtAvblDateTime").val((currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']) : new Date()));
@@ -155,9 +145,9 @@ jQuery(function($) {'use strict',
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
 
         google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(markerContent);
-            infowindow.open(map, this);
-            debugger;
+            infoWindow.setContent(markerContent);
+            infoWindow.open(map, this);
+            
             currentMarkerId['mapId'] = placeData.mapId;
             currentMarkerId['cashAvailable'] = placeData.cashAvailable;
             currentMarkerId['avgWaitTime'] = placeData.avgWaitTime;
@@ -197,13 +187,13 @@ jQuery(function($) {'use strict',
 	            	var mapList = [];
 	            	var atmBankMap = {};
 	                for (var i = 0; i < results.length; i++) {
-	                	//debugger;
+	                	//
 	                    //results[i].html_attributions='';
 	                    //createMarker(results[i],icon);
 	                    atmBankMap[results[i].id ] =  results[i];
 	                    mapList.push({'id' : results[i].id});
 	                }
-	                debugger;
+	                
 	                var dataToSave = saveMapData(results);
 	                $.ajax({
 					  url: '/api/findbank/ws/findbank/creates',
@@ -213,7 +203,7 @@ jQuery(function($) {'use strict',
 					  data: JSON.stringify(dataToSave),
 					  contentType: 'application/json',
 					  success: function(result){
-						  	debugger;
+						  	
 						  	 $.ajax({url: "/api/findbank/ws/findbank/ids",
 					        //crossDomain: true,
 					        type:'POST',
@@ -221,10 +211,10 @@ jQuery(function($) {'use strict',
 					        data:JSON.stringify(mapList),
 					        contentType: 'application/json',
 					        success: function(response){
-					            debugger;
+					            
 		                    	
 		                    	for (var i = 0; i < response.length; i++) {
-						        	//debugger;
+						        	//
 						            atmBankMap[response[i].mapId].html_attributions='';
 						            createMarker(atmBankMap[response[i].mapId], icon, response[i]);
 						        }
@@ -238,11 +228,11 @@ jQuery(function($) {'use strict',
      }
 
     function onUpdateBank(){
-    	debugger;
+    	
     }
 
     function saveMapData(dataList){
-    	debugger;
+    	
     	if(dataList.length > 0){
     	var mapDataList = [];
     	for (var i = 0; i < dataList.length; i++) {
@@ -282,7 +272,6 @@ jQuery(function($) {'use strict',
             //markersArray.length = 0;
         }
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
     
     function clearMarkers(){
         $('#show_btn').show();
@@ -300,7 +289,7 @@ jQuery(function($) {'use strict',
         }
     }
     function onOk(){
-    	debugger;
+    	
     	var cashStatus = Number($("#cashStatus").val());
     	var waitTime =  $("#avgWaitTime").val()? Number($("#avgWaitTime").val()) : -1;
     	var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
@@ -318,7 +307,7 @@ jQuery(function($) {'use strict',
 		        data:JSON.stringify(data),
 		        contentType: 'application/json',
 		        success: function(response){
-		            debugger;
+		            
 		        }});
     }
 
@@ -329,11 +318,18 @@ jQuery(function($) {'use strict',
             'Error: Your browser doesn\'t support geolocation.');
     }
 
-    function showMap(){
+    function showMap(inputLatLong){
+        var locationData = {};
         var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png&key=AIzaSyClM9KkifxJZgbSAKWQGz8QhUnAzNGEkuU';
         var markerImage = new google.maps.MarkerImage(imageUrl,new google.maps.Size(24, 32));
-        var input_addr=$('#address').val();
-        geocoder.geocode({address: input_addr}, function(results, status) {
+        if (!inputLatLong) {
+            var addresFromSearch = $('#address').val();
+            locationData.address = addresFromSearch;
+        }
+        else {
+            locationData.location = inputLatLong;
+        }
+        geocoder.geocode(locationData, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var latitude = results[0].geometry.location.lat();
                 var longitude = results[0].geometry.location.lng();
@@ -354,11 +350,11 @@ jQuery(function($) {'use strict',
                     $('#latitude').val(marker.getPosition().lat());
                     $('#longitude').val(marker.getPosition().lng());
                     sessionStorage.dontCheckLocation = "true";
-                    infowindow.setContent(results[0].formatted_address);
-                    infowindow.open(map, marker);
+                    infoWindow.setContent(results[0].formatted_address);
+                    infoWindow.open(map, marker);
                     search_types(marker.getPosition());
                     google.maps.event.addListener(marker, 'click', function() {
-                        infowindow.open(map,marker);
+                        infoWindow.open(map,marker);
                         
                     });
                 
@@ -375,10 +371,10 @@ jQuery(function($) {'use strict',
                                     $('#longitude').val(marker.getPosition().lng());
                                 }
                                 
-                                infowindow.setContent(results[0].formatted_address);
+                                infoWindow.setContent(results[0].formatted_address);
                                 var centralLatLng = marker.getPosition();
                                 search_types(centralLatLng);
-                                infowindow.open(map, marker);
+                                infoWindow.open(map, marker);
                             }
                         });
                     });

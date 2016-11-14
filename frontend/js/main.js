@@ -10,13 +10,7 @@ jQuery(function($) {
 
     $(function(){
         firstLoad();
-        $('#address_submit').on('click', function() {showMap();});
         $('#okBtn').on('click', onOk);
-        $('.chkbox').click(function () {
-            $(':checkbox').attr('checked', false);
-            $('#' + $(this).attr('id')).prop("checked", true);
-            search_types(map.getCenter());
-        });
         $('#updateBankButton').on('click', onUpdateModal);
 
          $('#address').keypress(function(e){
@@ -24,8 +18,12 @@ jQuery(function($) {
           //dosomething
           e.preventDefault();
           showMap();
+          $("#address").blur(); 
         }});
 
+         $('input[type=radio][name=type]').on('change', function() {
+           showMap();
+        });
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');
         var $portfolio = $('.portfolio-items');
@@ -102,7 +100,6 @@ jQuery(function($) {
        }
 
      function onUpdateModal(){
-       // debugger;
         var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
         var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : -1));
         var nextAvblTime = $("#nxtAvblDateTime").val((currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']) : new Date()));
@@ -135,11 +132,11 @@ jQuery(function($) {
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
         if(!infoWindow){
             infoWindow = new google.maps.InfoWindow({map: map});
+            infoWindow.close();
         }
         google.maps.event.addListener(marker, 'click', function() {
             infoWindow.setContent(markerContent);
             infoWindow.open(map, this);
-            //debugger;
             currentMarkerId['mapId'] = placeData.mapId;
             currentMarkerId['cashAvailable'] = placeData.cashAvailable;
             currentMarkerId['avgWaitTime'] = placeData.avgWaitTime;
@@ -152,9 +149,7 @@ jQuery(function($) {
     var dest='';
     
     
-    function search_types(latLng){
-        clearOverlays(); 
-      
+    function search_types(latLng){      
         if(!latLng){
             latLng = pyrmont;
         }
@@ -191,9 +186,6 @@ jQuery(function($) {
                     var mapList = [];
                     var atmBankMap = {};
                     for (var i = 0; i < results.length; i++) {
-                        //debugger;
-                        //results[i].html_attributions='';
-                        //createMarker(results[i],icon);
                         atmBankMap[results[i].id ] =  results[i];
                         mapList.push({'id' : results[i].id});
                     }
@@ -211,6 +203,7 @@ jQuery(function($) {
                             data:JSON.stringify(mapList),
                             contentType: 'application/json',
                             success: function(response){
+                                clearOverlays();
                                 for (var i = 0; i < response.length; i++) {
                                     atmBankMap[response[i].mapId].html_attributions='';
                                     createMarker(atmBankMap[response[i].mapId], icon, response[i]);
@@ -286,7 +279,6 @@ jQuery(function($) {
         }
     }
     function onOk(){
-       // debugger;
         var cashStatus = Number($("#cashStatus").val());
         var waitTime =  $("#avgWaitTime").val()? Number($("#avgWaitTime").val()) : -1;
         var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
@@ -382,7 +374,6 @@ jQuery(function($) {
                     });
 
                     map.addListener('idle', function(event) {
-                       // debugger;
                         marker.setPosition(map.getCenter())
                         search_types(map.getCenter());
                       });

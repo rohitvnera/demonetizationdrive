@@ -8,7 +8,7 @@ jQuery(function($) {
     var geocoder = new google.maps.Geocoder();
 
 
-	$(function(){
+    $(function(){
         firstLoad();
         $('#address_submit').on('click', showMap);
         $('#okBtn').on('click', onOk);
@@ -34,57 +34,41 @@ jQuery(function($) {
             $portfolio.isotope({ filter: selector });
             return false;
         });
-	});
+    });
 
 
-	// accordian
-	$('.accordion-toggle').on('click', function(){
-		$(this).closest('.panel-group').children().each(function(){
-		$(this).find('>.panel-heading').removeClass('active');
-		 });
+    // accordian
+    $('.accordion-toggle').on('click', function(){
+        $(this).closest('.panel-group').children().each(function(){
+        $(this).find('>.panel-heading').removeClass('active');
+         });
 
-	 	$(this).closest('.panel-heading').toggleClass('active');
-	});
+        $(this).closest('.panel-heading').toggleClass('active');
+    });
 
-	//Initiat WOW JS
-	new WOW().init();
+    //Initiat WOW JS
+    new WOW().init();
 
-	// Contact form
-	var form = $('#main-contact-form');
-	form.submit(function(event){
-		event.preventDefault();
-		var form_status = $('<div class="form_status"></div>');
-		$.ajax({
-			url: $(this).attr('action'),
+    
+    //goto top
+    $('.gototop').click(function(event) {
+        event.preventDefault();
+        $('html, body').animate({
+            scrollTop: $("body").offset().top
+        }, 500);
+    }); 
 
-			beforeSend: function(){
-				form.prepend( form_status.html('<p><i class="fa fa-spinner fa-spin"></i> Email is sending...</p>').fadeIn() );
-			}
-		}).done(function(data){
-			form_status.html('<p class="text-success">' + data.message + '</p>').delay(3000).fadeOut();
-		});
-	});
-
-	
-	//goto top
-	$('.gototop').click(function(event) {
-		event.preventDefault();
-		$('html, body').animate({
-			scrollTop: $("body").offset().top
-		}, 500);
-	});	
-
-	//Pretty Photo
-	$("a[rel^='prettyPhoto']").prettyPhoto({
-		social_tools: false
-	});	
+    //Pretty Photo
+    $("a[rel^='prettyPhoto']").prettyPhoto({
+        social_tools: false
+    }); 
 
     // var waypoints = [];                  
     function firstLoad() {
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,
-            zoom: 14
+            zoom: 15
         });
         infoWindow = new google.maps.InfoWindow({map: map});
 
@@ -112,18 +96,18 @@ jQuery(function($) {
        }
 
      function onUpdateModal(){
-     	
-     	var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
-    	var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : -1));
-    	var nextAvblTime = $("#nxtAvblDateTime").val((currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']) : new Date()));
+       // debugger;
+        var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
+        var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : -1));
+        var nextAvblTime = $("#nxtAvblDateTime").val((currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']) : new Date()));
      }
     function createMarker(place,icon, placeData) {
 
-    	if(placeData){
-    		var type = placeData.type;
-    		var status = [-1,0].indexOf(placeData.cashAvailable)!= -1? "unavble" :"avble";
-    		var icon = "images/bank_duniya_img/"+type+"_"+status+".png";
-    	} 
+        if(placeData){
+            var type = placeData.type;
+            var status = [-1,0].indexOf(placeData.cashAvailable)!= -1? "unavble" :"avble";
+            var icon = "images/bank_duniya_img/"+type+"_"+status+".png";
+        } 
         var placeLoc = place.geometry.location;
         var marker = new google.maps.Marker({
             map: map,
@@ -135,19 +119,19 @@ jQuery(function($) {
         
         markersArray.push(marker);
         var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name: </b>"+place.name+"<br><b>Cash Status: </b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
+        var  markerContent = "<b>Name:</b>"+place.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
         if(placeData.cashAvailable != 1){
-        	markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? placeData.nextAvailabilty : infoNotAvbl)+"<br>";
+            markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? placeData.nextAvailabilty : infoNotAvbl)+"<br>";
         }else{
-        	markerContent += "<b>Average Waiting Time: </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
+            markerContent += "<b>Average Waiting Time : </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
         }
-        markerContent += "<b>Address: </b>"+placeData.address+"<br><b> Status: </b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
+        markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
 
         google.maps.event.addListener(marker, 'click', function() {
             infoWindow.setContent(markerContent);
             infoWindow.open(map, this);
-            
+            //debugger;
             currentMarkerId['mapId'] = placeData.mapId;
             currentMarkerId['cashAvailable'] = placeData.cashAvailable;
             currentMarkerId['avgWaitTime'] = placeData.avgWaitTime;
@@ -169,93 +153,93 @@ jQuery(function($) {
         
         var type = [];
         $('.chkbox:checked').each(function( index , val ) {
-        					type.push(val.id);							  
-						});
+                            type.push(val.id);                            
+                        });
         var icon = "images/bank_duniya_img/"+type+".png";
         
         if(type.length){
-	        var request = {
-	            location: latLng,
-	            radius: 2000,
-	            types: [type] //e.g. school, restaurant,bank,bar,city_hall,gym,night_club,park,zoo
-	        };
-	       
-	        var service = new google.maps.places.PlacesService(map);
-	        service.search(request, function(results, status) {
-	            map.setZoom(14);
-	            if (status == google.maps.places.PlacesServiceStatus.OK) {
-	            	var mapList = [];
-	            	var atmBankMap = {};
-	                for (var i = 0; i < results.length; i++) {
-	                	//
-	                    //results[i].html_attributions='';
-	                    //createMarker(results[i],icon);
-	                    atmBankMap[results[i].id ] =  results[i];
-	                    mapList.push({'id' : results[i].id});
-	                }
-	                
-	                var dataToSave = saveMapData(results);
-	                $.ajax({
-					  url: '/api/findbank/ws/findbank/creates',
-					  type:'POST',
-					 // crossDomain: true,
-				      dataType: 'json',
-					  data: JSON.stringify(dataToSave),
-					  contentType: 'application/json',
-					  success: function(result){
-						  	
-						  	 $.ajax({url: "/api/findbank/ws/findbank/ids",
-					        //crossDomain: true,
-					        type:'POST',
-					        dataType: 'json',
-					        data:JSON.stringify(mapList),
-					        contentType: 'application/json',
-					        success: function(response){
-					            
-		                    	
-		                    	for (var i = 0; i < response.length; i++) {
-						        	//
-						            atmBankMap[response[i].mapId].html_attributions='';
-						            createMarker(atmBankMap[response[i].mapId], icon, response[i]);
-						        }
-					        }});
-					  }
-					});
-	               
-	            }
-	        });
+            var request = {
+                location: latLng,
+                radius: 2000,
+                types: [type] //e.g. school, restaurant,bank,bar,city_hall,gym,night_club,park,zoo
+            };
+           
+            var service = new google.maps.places.PlacesService(map);
+            service.search(request, function(results, status) {
+                map.setZoom(15);
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var mapList = [];
+                    var atmBankMap = {};
+                    for (var i = 0; i < results.length; i++) {
+                        //debugger;
+                        //results[i].html_attributions='';
+                        //createMarker(results[i],icon);
+                        atmBankMap[results[i].id ] =  results[i];
+                        mapList.push({'id' : results[i].id});
+                    }
+                    //debugger;
+                    var dataToSave = saveMapData(results);
+                    $.ajax({
+                      url: '/api/findbank/ws/findbank/creates',
+                      type:'POST',
+                     // crossDomain: true,
+                      dataType: 'json',
+                      data: JSON.stringify(dataToSave),
+                      contentType: 'application/json',
+                      success: function(result){
+                           // debugger;
+                             $.ajax({url: "/api/findbank/ws/findbank/ids",
+                            //crossDomain: true,
+                            type:'POST',
+                            dataType: 'json',
+                            data:JSON.stringify(mapList),
+                            contentType: 'application/json',
+                            success: function(response){
+                                debugger;
+                                
+                                for (var i = 0; i < response.length; i++) {
+                                    //debugger;
+                                    atmBankMap[response[i].mapId].html_attributions='';
+                                    createMarker(atmBankMap[response[i].mapId], icon, response[i]);
+                                }
+                            }});
+                      }
+                    });
+                   
+                }
+            });
         }
      }
 
     function onUpdateBank(){
-    	
+        
     }
 
     function saveMapData(dataList){
-    	
-    	if(dataList.length > 0){
-    	var mapDataList = [];
-    	for (var i = 0; i < dataList.length; i++) {
-            	var bankStatus = -1;
-            	if(dataList[i].opening_hours){
-            		bankStatus = dataList[i].opening_hours.open_now ? 1 : 0;
-            	}
-            	var mapData = {
-					"mapId" : dataList[i].id,
-					"mapReference": dataList[i].reference,
-					"latX": dataList[i].geometry.location.lat(),
-					"latY": dataList[i].geometry.location.lng(),
-					"type": dataList[i].types[0],
-					"name": dataList[i].name,
-					"contactNumber": null,
-					"bankOpenStatus": bankStatus,
-					"cashAvailable": -1,
-					"avgWaitTime": -1,
-					"nextAvailabilty": null,
-					"address":dataList[i].vicinity,
-					"placeId" : dataList[i].place_id
-            	};
-            	mapDataList.push(mapData);
+        
+        if(dataList.length > 0){
+        var mapDataList = [];
+        for (var i = 0; i < dataList.length; i++) {
+                var bankStatus = -1;
+                if(dataList[i].opening_hours){
+                    bankStatus = dataList[i].opening_hours.open_now ? 1 : 0;
+                }
+                var mapData = {
+                    "mapId" : dataList[i].id,
+                    "mapReference": dataList[i].reference,
+                    "latX": dataList[i].geometry.location.lat(),
+                    "latY": dataList[i].geometry.location.lng(),
+                    "type": dataList[i].types[0],
+                    "name": dataList[i].name,
+                    "contactNumber": null,
+                    "bankOpenStatus": bankStatus,
+                    "cashAvailable": -1,
+                    "avgWaitTime": -1,
+                    "nextAvailabilty": null,
+                    "address":dataList[i].vicinity,
+                    "placeId" : dataList[i].place_id
+                };
+                mapDataList.push(mapData);
                 //results[i].html_attributions='';
                 //createMarker(results[i],icon);
                 //mapList.push(results[i].id);
@@ -289,26 +273,27 @@ jQuery(function($) {
         }
     }
     function onOk(){
-    	
-    	var cashStatus = Number($("#cashStatus").val());
-    	var waitTime =  $("#avgWaitTime").val()? Number($("#avgWaitTime").val()) : -1;
-    	var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
-    	var markerId = currentMarkerId['mapId'];
-    	var data = {
-			"cashAvailable": cashStatus,
-			"avgWaitTime": waitTime,
-			"nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
-			  "mapId" : markerId
-			};
-    	$.ajax({url: "/api/findbank/ws/findbank/update2",
-		        //crossDomain: true,
-		        type:'PUT',
-		        dataType: 'json',
-		        data:JSON.stringify(data),
-		        contentType: 'application/json',
-		        success: function(response){
-		            
-		        }});
+       // debugger;
+        var cashStatus = Number($("#cashStatus").val());
+        var waitTime =  $("#avgWaitTime").val()? Number($("#avgWaitTime").val()) : -1;
+        var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
+        var markerId = currentMarkerId['mapId'];
+        var data = {
+            "cashAvailable": cashStatus,
+            "avgWaitTime": waitTime,
+            "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
+              "mapId" : markerId
+            };
+        $.ajax({url: "/api/findbank/ws/findbank/update2",
+                //crossDomain: true,
+                type:'PUT',
+                dataType: 'json',
+                data:JSON.stringify(data),
+                contentType: 'application/json',
+                success: function(response){
+                    search_types(map.getCenter());
+
+                }});
     }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -335,13 +320,14 @@ jQuery(function($) {
                 var longitude = results[0].geometry.location.lng();
                 var latlng = new google.maps.LatLng(latitude, longitude);
                 if (results[0]) {
-                    map.setZoom(14);
+                    map.setZoom(15);
                     map.setCenter(latlng);
                     marker = new google.maps.Marker({
                         position: latlng, 
                         map: map,
                         icon: markerImage,
-                        draggable: true 
+                        draggable: true ,
+                        animation: google.maps.Animation.DROP,
                         
                     }); 
                     $('#btn').hide();
@@ -349,7 +335,6 @@ jQuery(function($) {
                     $('#address').val(results[0].formatted_address);
                     $('#latitude').val(marker.getPosition().lat());
                     $('#longitude').val(marker.getPosition().lng());
-                    sessionStorage.dontCheckLocation = "true";
                     infoWindow.setContent(results[0].formatted_address);
                     infoWindow.open(map, marker);
                     search_types(marker.getPosition());
@@ -378,6 +363,20 @@ jQuery(function($) {
                             }
                         });
                     });
+
+                    map.addListener('center_changed', function(event) {
+                       // debugger;
+                        marker.setPosition(map.getCenter())
+                        search_types(map.getCenter());
+                      });
+
+                    google.maps.event.addListener(map, 'click', function(event) {
+    
+                            marker.setPosition(map.getCenter())
+                            map.setCenter(event.latLng);
+                            search_types(map.getCenter());
+                    });
+
                     
                 
                 } else {

@@ -364,7 +364,6 @@ input.search-form:hover {
 
 
 #main-slider {
-  position: relative;
 }
 
 .no-margin {
@@ -2500,8 +2499,8 @@ shortcodes page css
 }
 
 #footer {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   color: #fff;
   background: #2e2e2e;
 }
@@ -2526,6 +2525,56 @@ shortcodes page css
 }
 
 #map {
-    height: 560px;
-    width: 100%;      
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#address {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+
+#pac-input:focus {
+  border-color: #4d90fe;
+}
+
+.pac-container {
+  font-family: Roboto;
+}
+
+#type-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  padding: 5px 11px 0px 11px;
+  display: inline-block;
+}
+
+#type-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+#search-input {
+  text-align: center;
+  position: relative;
+  z-index: 10;
 }

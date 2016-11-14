@@ -19,6 +19,13 @@ jQuery(function($) {
         });
         $('#updateBankButton').on('click', onUpdateModal);
 
+         $('#address').keypress(function(e){
+        if(e.which == 13) {
+          //dosomething
+          e.preventDefault();
+          showMap();
+        }});
+
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');
         var $portfolio = $('.portfolio-items');
@@ -36,7 +43,6 @@ jQuery(function($) {
         });
     });
 
-
     // accordian
     $('.accordion-toggle').on('click', function(){
         $(this).closest('.panel-group').children().each(function(){
@@ -49,28 +55,28 @@ jQuery(function($) {
     //Initiat WOW JS
     new WOW().init();
 
-    
+
     //goto top
     $('.gototop').click(function(event) {
         event.preventDefault();
         $('html, body').animate({
             scrollTop: $("body").offset().top
         }, 500);
-    }); 
+    });
 
     //Pretty Photo
     $("a[rel^='prettyPhoto']").prettyPhoto({
         social_tools: false
-    }); 
+    });
 
-    // var waypoints = [];                  
+    // var waypoints = [];
     function firstLoad() {
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,
             zoom: 15
         });
-        infoWindow = new google.maps.InfoWindow({map: map});
+        //infoWindow = new google.maps.InfoWindow({map: map});
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -80,17 +86,16 @@ jQuery(function($) {
                     lng: position.coords.longitude
                 };
 
-                infoWindow.setPosition(pos);
-                //infoWindow.setContent('Location found.');
+                //infoWindow.setPosition(pos);
                 map.setCenter(pos);
                 showMap(pos);
             }, function() {
-                handleLocationError(true, infoWindow, map.getCenter());
+                //handleLocationError(true, //infoWindow, map.getCenter());
                 showMap();
             });
         } else {
             // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
+            //handleLocationError(false, //infoWindow, map.getCenter());
             showMap();
         }
        }
@@ -127,7 +132,9 @@ jQuery(function($) {
         }
         markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
-
+        if(!infoWindow){
+            infoWindow = new google.maps.InfoWindow({map: map});
+        }
         google.maps.event.addListener(marker, 'click', function() {
             infoWindow.setContent(markerContent);
             infoWindow.open(map, this);
@@ -177,44 +184,39 @@ jQuery(function($) {
                         atmBankMap[results[i].id ] =  results[i];
                         mapList.push({'id' : results[i].id});
                     }
-                    //debugger;
                     var dataToSave = saveMapData(results);
                     $.ajax({
                       url: '/api/findbank/ws/findbank/creates',
                       type:'POST',
-                     // crossDomain: true,
                       dataType: 'json',
                       data: JSON.stringify(dataToSave),
                       contentType: 'application/json',
                       success: function(result){
-                           // debugger;
-                             $.ajax({url: "/api/findbank/ws/findbank/ids",
-                            //crossDomain: true,
+                            $.ajax({url: "/api/findbank/ws/findbank/ids",
                             type:'POST',
                             dataType: 'json',
                             data:JSON.stringify(mapList),
                             contentType: 'application/json',
                             success: function(response){
                                 for (var i = 0; i < response.length; i++) {
-                                    //debugger;
                                     atmBankMap[response[i].mapId].html_attributions='';
                                     createMarker(atmBankMap[response[i].mapId], icon, response[i]);
                                 }
                             }});
                       }
                     });
-                   
+
                 }
             });
         }
      }
 
     function onUpdateBank(){
-        
+
     }
 
     function saveMapData(dataList){
-        
+
         if(dataList.length > 0){
         var mapDataList = [];
         for (var i = 0; i < dataList.length; i++) {
@@ -254,7 +256,7 @@ jQuery(function($) {
             //markersArray.length = 0;
         }
     }
-    
+
     function clearMarkers(){
         $('#show_btn').show();
         $('#hide_btn').hide();
@@ -267,7 +269,7 @@ jQuery(function($) {
             for (i in markersArray) {
                 markersArray[i].setVisible(true)
             }
-             
+
         }
     }
     function onOk(){
@@ -294,12 +296,12 @@ jQuery(function($) {
                 }});
     }
 
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-            'Error: The Geolocation service failed.' :
-            'Error: Your browser doesn\'t support geolocation.');
-    }
+    //function handleLocationError(browserHasGeolocation, //infoWindow, pos) {
+        //infoWindow.setPosition(pos);
+        //infoWindow.setContent(browserHasGeolocation ?
+        //    'Error: The Geolocation service failed.' :
+        //    'Error: Your browser doesn\'t support geolocation.');
+    //};
 
     function showMap(inputLatLong){
         var locationData = {};
@@ -320,30 +322,34 @@ jQuery(function($) {
                 if (results[0]) {
                     map.setZoom(15);
                     map.setCenter(latlng);
-                    marker = new google.maps.Marker({
-                        position: latlng, 
-                        map: map,
-                        icon: markerImage,
-                        draggable: true ,
-                        animation: google.maps.Animation.DROP,
-                        
-                    }); 
+                    if(!marker){
+                        marker = new google.maps.Marker({
+                            position: latlng, 
+                            map: map,
+                            icon: markerImage,
+                            draggable: true ,
+                            animation: google.maps.Animation.DROP,
+                            
+                        }); 
+                    }else{
+                        marker.setPosition(latlng);
+                    }
                     $('#btn').hide();
                     $('#latitude,#longitude').show();
                     $('#address').val(results[0].formatted_address);
                     $('#latitude').val(marker.getPosition().lat());
                     $('#longitude').val(marker.getPosition().lng());
-                    infoWindow.setContent(results[0].formatted_address);
-                    infoWindow.open(map, marker);
+                    //infoWindow.setContent(results[0].formatted_address);
+                    //infoWindow.open(map, marker);
                     search_types(marker.getPosition());
                     google.maps.event.addListener(marker, 'click', function() {
-                        infoWindow.open(map,marker);
-                        
+                        //infoWindow.open(map,marker);
+
                     });
-                
-                
+
+
                     google.maps.event.addListener(marker, 'dragend', function() {
-                      
+
                         geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
                             if (status == google.maps.GeocoderStatus.OK) {
                                 if (results[0]) {
@@ -353,16 +359,16 @@ jQuery(function($) {
                                     $('#latitude').val(marker.getPosition().lat());
                                     $('#longitude').val(marker.getPosition().lng());
                                 }
-                                
-                                infoWindow.setContent(results[0].formatted_address);
+
+                                //infoWindow.setContent(results[0].formatted_address);
                                 var centralLatLng = marker.getPosition();
                                 search_types(centralLatLng);
-                                infoWindow.open(map, marker);
+                                //infoWindow.open(map, marker);
                             }
                         });
                     });
 
-                    map.addListener('center_changed', function(event) {
+                    map.addListener('idle', function(event) {
                        // debugger;
                         marker.setPosition(map.getCenter())
                         search_types(map.getCenter());

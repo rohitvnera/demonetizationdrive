@@ -50,31 +50,46 @@
                         <li><a href="contact-us.html">Contact</a></li> 
                                            
                     </ul>
-                    <form class="navbar-form navbar-right" role="search">
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="bank" class="chkbox" checked value="bank"> Bank</label>
-                                    </div>
-                                    <div class="checkbox">
-                                    <label><input type="checkbox" id="atm" class="chkbox"  value="atm"> Atm</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                 <input class="form-control" type="text" id="address"  type="text" value="Bhubaneswar,odisha,india" placeholder="Search">    
-                            </div>
-                            <button class="btn btn-default" type="button" id="address_submit">Search</button>
-                        </form>   
+                    <!--<form class="navbar-form navbar-right" role="search">-->
+                            <!--<div class="form-group">-->
+                                <!--<div class="checkbox">-->
+                                    <!--<label><input type="checkbox" id="bank" class="chkbox" checked value="bank"> Bank</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="checkbox">-->
+                                    <!--<label><input type="checkbox" id="atm" class="chkbox"  value="atm"> Atm</label>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                                 <!--<input class="form-control" type="text" id="address"  type="text" value="Bhubaneswar,odisha,india" placeholder="Search">    -->
+                            <!--</div>-->
+                            <!--<button class="btn btn-default" type="button" id="address_submit">Search</button>-->
+                        <!--</form>   -->
                 </div>
                 
             </div><!--/.container-->
         </nav><!--/nav-->
-		
     </header><!--/header-->
 
-    <section id="main-slider" class="no-margin">                  
-        
+
+    <section id="main-slider" class="no-margin">
         <div id="map"></div>
-        
+        <div id="search-input">
+            <input class="controls" id="address" type="text"
+                   placeholder="Enter a location">
+            <div id="type-selector" class="controls">
+                <input type="radio" name="type" id="changetype-all" checked="checked">
+                <label for="changetype-all">All</label>
+
+                <input type="radio" name="type" id="bank">
+                <label for="bank">Bank</label>
+
+                <input type="radio" name="type" id="atm">
+                <label for="atm">ATM</label>
+
+                <!--<input type="radio" name="type" id="changetype-geocode">-->
+                <!--<label for="changetype-geocode">Geocodes</label>-->
+            </div>
+        </div>
         <input type="text" id="latitude" style="display:none;" placeholder="Latitude"/>
         <input type="text" id="longitude" style="display:none;" placeholder="Longitude"/>
        <!-- <input type="button"  id="hide_btn" value="hide markers" onClick="clearMarkers();" />-->
@@ -89,16 +104,6 @@
 
     <footer id="footer" class="midnight-blue">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <ul class="pull-right">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Faq</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-            </div>
         </div>
     </footer><!--/#footer-->
     <!-- Save Modal -->

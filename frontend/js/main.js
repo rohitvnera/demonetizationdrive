@@ -10,7 +10,7 @@ jQuery(function($) {
 
     $(function(){
         firstLoad();
-        $('#address_submit').on('click', showMap);
+        $('#address_submit').on('click', function() {showMap();});
         $('#okBtn').on('click', onOk);
         $('.chkbox').click(function () {
             $(':checkbox').attr('checked', false);
@@ -148,7 +148,7 @@ jQuery(function($) {
         clearOverlays(); 
       
         if(!latLng){
-            var latLng = pyrmont;
+            latLng = pyrmont;
         }
         
         var type = [];
@@ -195,8 +195,6 @@ jQuery(function($) {
                             data:JSON.stringify(mapList),
                             contentType: 'application/json',
                             success: function(response){
-                                debugger;
-                                
                                 for (var i = 0; i < response.length; i++) {
                                     //debugger;
                                     atmBankMap[response[i].mapId].html_attributions='';

@@ -6,7 +6,7 @@ jQuery(function($) {
         29: 'Less than 30 mins',
         59 : 'Less than 1 hour',
         119: 'Less than 2 hours',
-        121 : 'more than 2 hours',
+        121 : 'more than 2 hours'
     };
     var map;
     var infoWindow;
@@ -29,8 +29,9 @@ jQuery(function($) {
           $("#address").blur(); 
         }});
          $("#cashStatus").on('change', updatePopUp);
-         $('input[type=radio][name=type]').on('change', function() {
-           showMap();
+        $('input[type=radio][name=type]').on('change', function () {
+            clearOverlays();
+            showMap();
         });
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');
@@ -131,12 +132,11 @@ jQuery(function($) {
             $('#avgWaitTimeDiv').show();
         }
      }
-    function createMarker(place,icon, placeData) {
-
-        if(placeData){
-            var type = placeData.type;
-             var status = "";
-            switch(placeData.cashAvailable){
+    function createMarker(place, type, placeData) {
+        var icon = undefined;
+        if (placeData) {
+            var status = "";
+            switch (placeData.cashAvailable) {
                 case -1:
                     status = "no_info";
                     break;
@@ -147,9 +147,8 @@ jQuery(function($) {
                     status = "avble";
                     break;
             }
-            var icon = "images/bank_duniya_img/"+type+"_"+status+".png";
-        } 
-        var placeLoc = place.geometry.location;
+            icon = "images/bank_duniya_img/" + type + "_" + status + ".png";
+        }
         var marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
@@ -183,114 +182,113 @@ jQuery(function($) {
         });
        
     }
-    var source="";
-    var dest='';
-    
-    
-    function search_types(latLng){      
+
+
+    function processSearchRes(results, typeOption) {
+        var mapList = [];
+        var atmBankMap = {};
+        $.each(results, function(ind, data){
+            var found = false;
+            $.each(data.types, function(ind2, type){
+                if (type === typeOption) {
+                    found = true;
+                    return false;
+                }
+            });
+            if (found) {
+                atmBankMap[data.id] = data;
+                mapList.push({'id': data.id});
+            }
+        });
+        var dataToSave = getDataToSave(atmBankMap, typeOption);
+        $.ajax({
+            url: '/api/findbank/ws/findbank/creates',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(dataToSave),
+            contentType: 'application/json',
+            success: function (result) {
+                $.ajax({
+                    url: "/api/findbank/ws/findbank/ids",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(mapList),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        //clearOverlays();
+                        var newMapIds = {};
+                        $.each(response, function (ind, data) {
+                            newMapIds[data.mapId] = true;
+                            if (paintedMapid[data.mapId]) {
+                                return true;
+                            }
+                            atmBankMap[data.mapId].html_attributions = '';
+                            createMarker(atmBankMap[data.mapId], typeOption, data);
+                        });
+                        paintedMapid = newMapIds;
+                    }
+                });
+            }
+        });
+    }
+
+    function searchAndPaint(latLng, typeOption) {
+        var type = [];
+        type.push(typeOption);
+
+        var request = {
+            location: latLng,
+            radius: 5000,
+            types: [typeOption]
+        };
+
+        var service = new google.maps.places.PlacesService(map);
+        service.search(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                processSearchRes(results, typeOption);
+            }
+        });
+    }
+
+    function search_types(latLng){
         if(!latLng){
             latLng = pyrmont;
         }
-        
-        var type = [];
+
         var typeOption = "";
         $('input[name="type"]:checked').each(function( index , val ) {
                             typeOption = val.id;                            
                         });
-        switch(typeOption){
-            case 'bank':
-                type = ['bank'];
-                break;
-            case  'atm':
-                type = ['atm'];
-                break;
-            case 'changetype_all':
-                type = ['bank', 'atm'];
-                break;
-        }
-        var icon = "images/bank_duniya_img/"+type+".png";
-        
-        if(type.length){
-            var request = {
-                location: latLng,
-                radius: 5000,
-                types: [type] //e.g. school, restaurant,bank,bar,city_hall,gym,night_club,park,zoo
-            };
-           
-            var service = new google.maps.places.PlacesService(map);
-            service.search(request, function(results, status) {
-                //map.setZoom(15);
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    var mapList = [];
-                    var atmBankMap = {};
-                    for (var i = 0; i < results.length; i++) {
-                        atmBankMap[results[i].id ] =  results[i];
-                        mapList.push({'id' : results[i].id});
-                    }
-                    var dataToSave = saveMapData(results);
-                    $.ajax({
-                      url: '/api/findbank/ws/findbank/creates',
-                      type:'POST',
-                      dataType: 'json',
-                      data: JSON.stringify(dataToSave),
-                      contentType: 'application/json',
-                      success: function(result){
-                            $.ajax({url: "/api/findbank/ws/findbank/ids",
-                            type:'POST',
-                            dataType: 'json',
-                            data:JSON.stringify(mapList),
-                            contentType: 'application/json',
-                            success: function(response){
-                                //clearOverlays();
-                                var newMapIds = {};
-                                $.each(response, function(ind, data){
-                                    newMapIds[data.mapId] = true;
-                                    if (paintedMapid[data.mapId]) {
-                                        return true;
-                                    }
-                                    atmBankMap[data.mapId].html_attributions='';
-                                    createMarker(atmBankMap[data.mapId], icon, data);
-                                });
-                                paintedMapid = newMapIds;
-                            }});
-                      }
-                    });
+        searchAndPaint(latLng, typeOption);
+    }
 
-                }
-            });
-        }
-     }
-
-    function saveMapData(dataList){
-
-        if(dataList.length > 0){
+    function getDataToSave(dataMap, typeOption){
         var mapDataList = [];
-        for (var i = 0; i < dataList.length; i++) {
-                var bankStatus = -1;
-                if(dataList[i].opening_hours){
-                    bankStatus = dataList[i].opening_hours.open_now ? 1 : 0;
-                }
-                var mapData = {
-                    "mapId" : dataList[i].id,
-                    "mapReference": dataList[i].reference,
-                    "latX": dataList[i].geometry.location.lat(),
-                    "latY": dataList[i].geometry.location.lng(),
-                    "type": dataList[i].types[0],
-                    "name": dataList[i].name,
-                    "contactNumber": null,
-                    "bankOpenStatus": bankStatus,
-                    "cashAvailable": -1,
-                    "avgWaitTime": -1,
-                    "nextAvailabilty": null,
-                    "address":dataList[i].vicinity,
-                    "placeId" : dataList[i].place_id
-                };
-                mapDataList.push(mapData);
-                //results[i].html_attributions='';
-                //createMarker(results[i],icon);
-                //mapList.push(results[i].id);
+        $.each(dataMap, function(ind, data){
+            var bankStatus = -1;
+            if (data.opening_hours) {
+                bankStatus = data.opening_hours.open_now ? 1 : 0;
             }
-        }
+            var mapData = {
+                "mapId": data.id,
+                "mapReference": data.reference,
+                "latX": data.geometry.location.lat(),
+                "latY": data.geometry.location.lng(),
+                "type": typeOption,
+                "name": data.name,
+                "contactNumber": null,
+                "bankOpenStatus": bankStatus,
+                "cashAvailable": -1,
+                "avgWaitTime": -1,
+                "nextAvailabilty": null,
+                "address": data.vicinity,
+                "placeId": data.place_id
+            };
+            mapDataList.push(mapData);
+            //results[i].html_attributions='';
+            //createMarker(results[i],icon);
+            //mapList.push(results[i].id);
+        });
         return mapDataList;
     }
     // Deletes all markers in the array by removing references to them

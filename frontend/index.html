@@ -20,7 +20,6 @@
     <script src="js/respond.min.js"></script>
     <![endif]-->       
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyD8uogzabMq-NyGWFezKhqdoAAWZNvoAic"></script>
     <link rel="shortcut icon" href="images/ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
@@ -176,7 +175,20 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/jquery.isotope.min.js"></script>
-    <script src="js/main.js"></script>
     <script src="js/wow.min.js"></script>
+     <script>
+        function initMain() {
+        var url = "js/main.js";
+        var $body = $("body");
+        $body.append("<script src=\"" +  url + "\"><\/script>");
+        }
+        //debugger;
+        var keys = ['AIzaSyBfdd_QdzuwxY4G2hR0oZBwoEJUGw7Cmzc','AIzaSyAWa4r5g9eGOp4JsEGU6X0s_ShA7Wx--YE','AIzaSyD8uogzabMq-NyGWFezKhqdoAAWZNvoAic','AIzaSyC4WlXbheNpiuEdHP5GaEUEFjZ_QTNclQY'];
+        var ind = Number(new Date().getTime()) % keys.length;
+        var key = keys[ind];
+        var url = "https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=" + key+ "&callback=initMain";
+        var $body = $("body");
+        $body.append("<script src=\"" +  url + "\"><\/script>");
+    </script>
 </body>
 </html>

@@ -10,7 +10,7 @@ jQuery(function($) {
     };
     var map;
     var infoWindow;
-    var markersArray = [];
+    var markersMap = {};
     var pyrmont = new google.maps.LatLng(18.5204303, 73.8567437);
     var marker;
     var geocoder = new google.maps.Geocoder();
@@ -132,8 +132,9 @@ jQuery(function($) {
             $('#avgWaitTimeDiv').show();
         }
      }
-    function createMarker(place, type, placeData) {
+    function createMarker(location, placeData) {
         var icon = undefined;
+        var type = placeData.type;
         if (placeData) {
             var status = "";
             switch (placeData.cashAvailable) {
@@ -151,15 +152,14 @@ jQuery(function($) {
         }
         var marker = new google.maps.Marker({
             map: map,
-            position: place.geometry.location,
+            position: location,
             icon: icon,
-            visible:true  
-            
+            visible:true
         });
         
-        markersArray.push(marker);
+        markersMap[placeData.mapId] = marker;
         var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name:</b>"+place.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
+        var  markerContent = "<b>Name:</b>"+placeData.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
         if(placeData.cashAvailable != 1){
             markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty) : infoNotAvbl)+"<br>";
         }else{
@@ -181,9 +181,7 @@ jQuery(function($) {
             currentMarkerId['nextAvailabilty'] = placeData.nextAvailabilty;
             onUpdateModal();
         });
-       
     }
-
 
     function processSearchRes(results, typeOption) {
         var mapList = [];
@@ -224,7 +222,7 @@ jQuery(function($) {
                                 return true;
                             }
                             atmBankMap[data.mapId].html_attributions = '';
-                            createMarker(atmBankMap[data.mapId], typeOption, data);
+                            createMarker(atmBankMap[data.mapId].geometry.location, data);
                         });
                         paintedMapid = newMapIds;
                     }
@@ -294,15 +292,13 @@ jQuery(function($) {
     }
     // Deletes all markers in the array by removing references to them
     function clearOverlays() {
-        if(infoWindow)
-        {
+        if (infoWindow) {
             infoWindow.close();
         }
-        if (markersArray) {
-            for (i in markersArray) {
-                markersArray[i].setVisible(false)
-            }
-            //markersArray.length = 0;
+        if (markersMap) {
+            $.each(markersMap, function (markerId, marker) {
+                marker.setVisible(false);
+            });
         }
     }
 
@@ -314,34 +310,38 @@ jQuery(function($) {
     function showMarkers(){
         $('#show_btn').hide();
         $('#hide_btn').show();
-        if (markersArray) {
-            for (i in markersArray) {
-                markersArray[i].setVisible(true)
+        if (markersMap) {
+            for (i in markersMap) {
+                markersMap[i].setVisible(true)
             }
 
         }
     }
     function onOk(){
         var cashStatus = Number($("#cashStatus").val());
-        var waitTime =  $("#avgWaitTime").val() > 0 ? Number($("#avgWaitTime").val()) : 29;
+        var waitTime = $("#avgWaitTime").val() > 0 ? Number($("#avgWaitTime").val()) : 29;
         var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
         var markerId = currentMarkerId['mapId'];
+        var marker = markersMap[markerId];
+        marker.setVisible(false);
         var data = {
             "cashAvailable": cashStatus,
             "avgWaitTime": waitTime,
             "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
-              "mapId" : markerId
-            };
-        $.ajax({url: "/api/findbank/ws/findbank/update2",
-                //crossDomain: true,
-                type:'PUT',
-                dataType: 'json',
-                data:JSON.stringify(data),
-                contentType: 'application/json',
-                success: function(response){
-                    search_types(map.getCenter());
-
-                }});
+            "mapId": markerId
+        };
+        $.ajax({
+            url: "/api/findbank/ws/findbank/update2",
+            //crossDomain: true,
+            type: 'PUT',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (response) {
+                createMarker(marker.position, response);
+                infoWindow.close();
+            }
+        });
     }
 
     //function handleLocationError(browserHasGeolocation, //infoWindow, pos) {

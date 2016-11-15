@@ -1,6 +1,6 @@
 
 jQuery(function($) {
-    var currentMarkerId = {};
+    var currentMarkerId = {'markerEvent' : false};
     var paintedMapid = {};
     var avgWaitTimeValueMap = {
         29: 'Less than 30 mins',
@@ -172,6 +172,7 @@ jQuery(function($) {
             infoWindow.close();
         }
         google.maps.event.addListener(marker, 'click', function() {
+            currentMarkerId['markerEvent'] = true;
             infoWindow.setContent(markerContent);
             infoWindow.open(map, this);
             currentMarkerId['mapId'] = placeData.mapId;
@@ -416,8 +417,11 @@ jQuery(function($) {
                     });
 
                     map.addListener('idle', function(event) {
-                        marker.setPosition(map.getCenter())
-                        search_types(map.getCenter());
+                        if(!currentMarkerId['markerEvent']){
+                            marker.setPosition(map.getCenter());
+                            search_types(map.getCenter());
+                        }
+                         currentMarkerId['markerEvent']  = false;
                       });
 
                     google.maps.event.addListener(map, 'click', function(event) {

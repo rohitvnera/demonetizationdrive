@@ -422,7 +422,9 @@ jQuery(function($) {
         //    'Error: The Geolocation service failed.' :
         //    'Error: Your browser doesn\'t support geolocation.');
     //};
+    function clearAllSearch() {
 
+    }
     function showMap(inputLatLong){
         var locationData = {};
         var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';

@@ -159,13 +159,13 @@ jQuery(function($) {
         
         markersMap[placeData.mapId] = marker;
         var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name:</b>"+placeData.name+"<br><b>Cash Status:</b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
+        var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
         if(placeData.cashAvailable != 1){
-            markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty) : infoNotAvbl)+"<br>";
+            markerContent += "<b>Next Availability: </b>"+(placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty) : infoNotAvbl)+"<br>";
         }else{
-            markerContent += "<b>Average Waiting Time : </b>"+(placeData.avgWaitTime!= -1 ? avgWaitTimeValueMap[placeData.avgWaitTime] : avgWaitTimeValueMap[29]) +"<br>";
+            markerContent += "<b>Average Waiting Time: </b>"+(placeData.avgWaitTime!= -1 ? avgWaitTimeValueMap[placeData.avgWaitTime] : avgWaitTimeValueMap[29]) +"<br>";
         }
-        markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
+        markerContent += "<b>Address: </b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
         if(!infoWindow){
             infoWindow = new google.maps.InfoWindow({map: map});

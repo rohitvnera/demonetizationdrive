@@ -77,8 +77,11 @@
     <section id="main-slider" class="no-margin">
         <div id="map"></div>
         <div id="search-input">
+            <div style="display: inline-block">
             <input class="controls" id="address" type="text"
                    placeholder="Enter a location">
+            <span id="searchclear" class="glyphicon glyphicon-remove" onclick="$('#address').val('')" style="color: lightgrey; right: 20px"></span>
+            </div>
             <div id="type-selector" class="controls">
                 <input type="radio" name="type" id="bank" checked="checked">
                 <label for="bank">Bank</label>
@@ -89,7 +92,6 @@
                 <!--<input type="radio" name="type" id="changetype-geocode">-->
                 <!--<label for="changetype-geocode">Geocodes</label>-->
             </div>
-            <span id="searchclear" class="glyphicon glyphicon-remove" onclick="$('#address').val('')" style="color: lightgrey; right: 150px"></span>
         </div>
         <input type="text" id="latitude" style="display:none;" placeholder="Latitude"/>
         <input type="text" id="longitude" style="display:none;" placeholder="Longitude"/>

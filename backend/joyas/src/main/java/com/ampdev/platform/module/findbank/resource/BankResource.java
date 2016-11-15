@@ -1,5 +1,6 @@
 package com.ampdev.platform.module.findbank.resource;
 
+import com.ampdev.platform.framework.clock.ClockInstance;
 import com.ampdev.platform.framework.dataaccess.IDataAccess;
 import com.ampdev.platform.framework.dataaccess.exception.DataAccessException;
 import com.ampdev.platform.framework.rest.RestBaseResource;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,10 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/ws/findbank")
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class BankResource extends RestBaseResource {
+
+    private static final int FAST_CASH = 16;
+    private static final int CASH = 90;
+    private static final int NO_CASH = 360;
 
     private final static String SUCCESS = "{\"status\" : true}";
     private final static String SUCCESS_WITH_DATA = "{\"status\" : true, \"data\" : \"%s\"}";
@@ -132,11 +138,17 @@ public class BankResource extends RestBaseResource {
                 if (bankStatusFromDB != null) {
                     bankStatusFromDB.setCashAvailable(bankStatus.getCashAvailable());
                     if (bankStatus.getCashAvailable() == 1) {
-                        bankStatusFromDB.setAvgWaitTime(bankStatus.getAvgWaitTime());
+                        if (Util.takeAvg(bankStatusFromDB)) {
+                            bankStatusFromDB.setAvgWaitTime((bankStatus.getAvgWaitTime()
+                                    + bankStatusFromDB.getAvgWaitTime()) / 2);
+                        } else {
+                            bankStatusFromDB.setAvgWaitTime(bankStatus.getAvgWaitTime());
+                        }
                     } else {
-                        bankStatusFromDB.setAvgWaitTime(-1);
                         bankStatusFromDB.setNextAvailabilty(bankStatus.getNextAvailabilty());
+                        bankStatusFromDB.setAvgWaitTime(-1L);
                     }
+                    bankStatusFromDB.setWhenModified(new Date(ClockInstance.getInstance().getCurrentTimeMillis()));
                     dataAccess.update(bankStatusFromDB);
                     return new ResponseEntity<>(bankStatusFromDB, HttpStatus.OK);
                 }

@@ -32,7 +32,7 @@ public class DatabaseConfiguration {
         dataSource.setDriverClass("com.mysql.jdbc.Driver");
         dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/findbank");
         dataSource.setUsername("root");
-        dataSource.setPassword("d3m0n3tizati0n");
+        dataSource.setPassword("ampdev");
         dataSource.setIdleConnectionTestPeriodInMinutes(60);
         dataSource.setIdleMaxAgeInMinutes(240);
         dataSource.setMaxConnectionsPerPartition(10);

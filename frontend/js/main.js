@@ -3,10 +3,11 @@ jQuery(function($) {
     var currentMarkerId = {'markerEvent' : false};
     var paintedMapid = {};
     var avgWaitTimeValueMap = {
-        29: 'Less than 30 mins',
-        59 : 'Less than 1 hour',
-        119: 'Less than 2 hours',
-        121 : 'more than 2 hours'
+        15 : 'Immediate'
+        30: '30 mins',
+        60 : '1 hour',
+        120: '2 hours',
+        121 : 'More than 2 hours'
     };
     var map;
     var infoWindow;
@@ -110,7 +111,7 @@ jQuery(function($) {
 
      function onUpdateModal(){
         var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
-        var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : 29));
+        var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : 15));
         var nextAvblTime = currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']).toISOString() : new Date().toISOString();
         $("#nxtAvblDateTime").val(nextAvblTime.substr(0, maxDate.indexOf('.')));
 

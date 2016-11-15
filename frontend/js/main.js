@@ -163,7 +163,7 @@ jQuery(function($) {
         markersMap[placeData.mapId] = marker;
         markers.push(marker);
         var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(placeData.cashAvailable == 1 ? "Available" : "Not Available")+"<br>";
+        var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(getCashStatus(placeData.cashAvailable))+"<br>";
         if(placeData.cashAvailable != 1){
             markerContent += "<b>Next Availability: </b>"+(placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty) : infoNotAvbl)+"<br>";
         }else{
@@ -185,6 +185,21 @@ jQuery(function($) {
             currentMarkerId['nextAvailabilty'] = placeData.nextAvailabilty;
             onUpdateModal();
         });
+    }
+
+
+    function getCashStatus(cashStatus) {
+        if(cashStatus) {
+            switch(cashStatus) {
+                case 1:
+                    return "Available";
+                case 0:
+                    return "Not Available"
+                default:
+                    return "Information Not Available";
+            }
+        }
+        return "Information Not Available";
     }
 
     function processSearchRes(results, typeOption, newMapIds) {

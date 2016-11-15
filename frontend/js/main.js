@@ -33,7 +33,7 @@ jQuery(function($) {
          $("#cashStatus").on('change', updatePopUp);
         $('input[type=radio][name=type]').on('change', function () {
             clearOverlays();
-            showMap();
+            showMap(map.getCenter());
         });
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');

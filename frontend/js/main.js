@@ -426,9 +426,6 @@ jQuery(function($) {
         //    'Error: The Geolocation service failed.' :
         //    'Error: Your browser doesn\'t support geolocation.');
     //};
-    function clearAllSearch() {
-
-    }
     function showMap(inputLatLong){
         var locationData = {};
         var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
@@ -460,6 +457,7 @@ jQuery(function($) {
                     }else{
                         marker.setPosition(latlng);
                     }
+                    marker.setVisible(false);
                     $('#btn').hide();
                     $('#latitude,#longitude').show();
                     $('#address').val(results[0].formatted_address);
@@ -511,9 +509,7 @@ jQuery(function($) {
 
                     
                 
-                } else {
-                    alert("No results found");
-                }
+                } 
             } else {
                 alert("Please enable location services");
             }

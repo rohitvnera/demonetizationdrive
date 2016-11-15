@@ -431,7 +431,7 @@ jQuery(function($) {
                     alert("No results found");
                 }
             } else {
-                alert("Geocoder failed due to: " + status);
+                alert("Please enable location services");
             }
         });                
     }   

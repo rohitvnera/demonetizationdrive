@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class BankResource extends RestBaseResource {
 
     private final static String SUCCESS = "{\"status\" : true}";
+    private final static String SUCCESS_WITH_DATA = "{\"status\" : true, \"data\" : \"%s\"}";
     private final static String ERROR = "{\"status\": false, \"message\": \"%s\"}";
     @Autowired
     private BankDao bankDao;
@@ -137,7 +138,7 @@ public class BankResource extends RestBaseResource {
                         bankStatusFromDB.setNextAvailabilty(bankStatus.getNextAvailabilty());
                     }
                     dataAccess.update(bankStatusFromDB);
-                    return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+                    return new ResponseEntity<>(bankStatusFromDB, HttpStatus.OK);
                 }
             }
 

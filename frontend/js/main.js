@@ -1,4 +1,10 @@
 var currentMarkerId = {};
+var avgWaitTimeValueMap = {
+                            29: 'Less than 30 mins',                                  
+                           59 : 'Less than 1 hour',
+                           119: 'Less than 2 hours',                                  
+                           121 : 'more than 2 hours',
+                        };
 jQuery(function($) {
     var map;
     var infoWindow;
@@ -20,7 +26,7 @@ jQuery(function($) {
           showMap();
           $("#address").blur(); 
         }});
-
+         $("#cashStatus").on('change', updatePopUp);
          $('input[type=radio][name=type]').on('change', function() {
            showMap();
         });
@@ -101,8 +107,27 @@ jQuery(function($) {
 
      function onUpdateModal(){
         var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
-        var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : -1));
-        var nextAvblTime = $("#nxtAvblDateTime").val((currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']) : new Date()));
+        var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : 29));
+        var nextAvblTime = currentMarkerId['nextAvailabilty'] ? new Date(currentMarkerId['nextAvailabilty']).toISOString() : new Date().toISOString();
+        $("#nxtAvblDateTime").val(nextAvblTime.substr(0, maxDate.indexOf('.')));
+
+        if(Number(currentMarkerId['cashAvailable']) != 1){
+            $('#avgWaitTimeDiv').hide();
+            $("#nxtAvblDateTimeDiv").show();
+        }else{
+            $("#nxtAvblDateTimeDiv").hide();
+            $('#avgWaitTimeDiv').show();
+        }
+     }
+
+     function updatePopUp(){
+        if($("#cashStatus").val() != 1){
+            $('#avgWaitTimeDiv').hide();
+            $("#nxtAvblDateTimeDiv").show();
+        }else{
+            $("#nxtAvblDateTimeDiv").hide();
+            $('#avgWaitTimeDiv').show();
+        }
      }
     function createMarker(place,icon, placeData) {
 
@@ -137,7 +162,7 @@ jQuery(function($) {
         if(placeData.cashAvailable != 1){
             markerContent += "<b>Next Availability:</b>"+(placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty) : infoNotAvbl)+"<br>";
         }else{
-            markerContent += "<b>Average Waiting Time : </b>"+(placeData.avgWaitTime!= -1 ? placeData.avgWaitTime : infoNotAvbl) +"<br>";
+            markerContent += "<b>Average Waiting Time : </b>"+(placeData.avgWaitTime!= -1 ? avgWaitTimeValueMap[placeData.avgWaitTime] : avgWaitTimeValueMap[29]) +"<br>";
         }
         markerContent += "<b>Address :</b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
@@ -295,7 +320,7 @@ jQuery(function($) {
     }
     function onOk(){
         var cashStatus = Number($("#cashStatus").val());
-        var waitTime =  $("#avgWaitTime").val()? Number($("#avgWaitTime").val()) : -1;
+        var waitTime =  $("#avgWaitTime").val() > 0 ? Number($("#avgWaitTime").val()) : 29;
         var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
         var markerId = currentMarkerId['mapId'];
         var data = {

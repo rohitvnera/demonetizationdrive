@@ -86,6 +86,7 @@ jQuery(function($) {
             mapTypeControl: false
         });
         //infoWindow = new google.maps.InfoWindow({map: map});
+        initMap();
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -342,6 +343,26 @@ jQuery(function($) {
                 createMarker(marker.position, response);
                 infoWindow.close();
             }
+        });
+    }
+
+    function initMap() {
+        var input = /** @type {!HTMLInputElement} */(
+            document.getElementById('address'));
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', map);
+
+        autocomplete.addListener('place_changed', function() {
+
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // User entered the name of a Place that was not suggested and
+                // pressed the Enter key, or the Place Details request failed.
+                window.alert("No details available for input: '" + place.name + "'");
+                return;
+            }
+            map.setCenter(place.geometry.location);
         });
     }
 

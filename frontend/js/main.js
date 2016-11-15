@@ -3,7 +3,7 @@ jQuery(function($) {
     var currentMarkerId = {'markerEvent' : false};
     var paintedMapid = {};
     var avgWaitTimeValueMap = {
-        15 : 'Immediate'
+        15 : 'Immediate',
         30: '30 mins',
         60 : '1 hour',
         120: '2 hours',

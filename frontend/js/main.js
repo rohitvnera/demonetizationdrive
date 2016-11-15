@@ -185,7 +185,7 @@ jQuery(function($) {
         });
     }
 
-    function processSearchRes(results, typeOption) {
+    function processSearchRes(results, typeOption, newMapIds) {
         var mapList = [];
         var atmBankMap = {};
         $.each(results, function(ind, data){
@@ -217,7 +217,6 @@ jQuery(function($) {
                     contentType: 'application/json',
                     success: function (response) {
                         //clearOverlays();
-                        var newMapIds = {};
                         $.each(response, function (ind, data) {
                             newMapIds[data.mapId] = true;
                             if (paintedMapid[data.mapId]) {
@@ -226,7 +225,7 @@ jQuery(function($) {
                             atmBankMap[data.mapId].html_attributions = '';
                             createMarker(atmBankMap[data.mapId].geometry.location, data);
                         });
-                        paintedMapid = newMapIds;
+                        $.extend(paintedMapid, newMapIds);
                     }
                 });
             }
@@ -243,10 +242,14 @@ jQuery(function($) {
             types: [typeOption]
         };
 
+        var newMapIds = {};
         var service = new google.maps.places.PlacesService(map);
-        service.search(request, function (results, status) {
+        service.nearbySearch(request, function (results, status, pagination) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                processSearchRes(results, typeOption);
+                processSearchRes(results, typeOption, newMapIds);
+                if (pagination.hasNextPage) {
+                    pagination.nextPage();
+                }
             }
         });
     }
@@ -350,11 +353,21 @@ jQuery(function($) {
         var input = /** @type {!HTMLInputElement} */(
             document.getElementById('address'));
 
+        var types = document.getElementById('type-selector');
+        //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        //map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
-        autocomplete.addListener('place_changed', function() {
+        //var marker = new google.maps.Marker({
+        //    map: map,
+        //    anchorPoint: new google.maps.Point(0, -29)
+        //});
 
+        autocomplete.addListener('place_changed', function() {
+            //infoWindow.close();
+            //marker.setVisible(false);
             var place = autocomplete.getPlace();
             if (!place.geometry) {
                 // User entered the name of a Place that was not suggested and
@@ -362,7 +375,29 @@ jQuery(function($) {
                 window.alert("No details available for input: '" + place.name + "'");
                 return;
             }
+
             map.setCenter(place.geometry.location);
+            //// If the place has a geometry, then present it on a map.
+            //if (place.geometry.viewport) {
+            //    map.fitBounds(place.geometry.viewport);
+            //} else {
+            //    map.setCenter(place.geometry.location);
+            //    map.setZoom(17);  // Why 17? Because it looks good.
+            //}
+            //marker.setPosition(place.geometry.location);
+            //marker.setVisible(true);
+
+            //var address = '';
+            //if (place.address_components) {
+            //    address = [
+            //        (place.address_components[0] && place.address_components[0].short_name || ''),
+            //        (place.address_components[1] && place.address_components[1].short_name || ''),
+            //        (place.address_components[2] && place.address_components[2].short_name || '')
+            //    ].join(' ');
+            //}
+
+            //infoWindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            //infoWindow.open(map, marker);
         });
     }
 

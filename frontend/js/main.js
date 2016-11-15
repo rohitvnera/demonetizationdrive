@@ -12,6 +12,7 @@ jQuery(function($) {
     var map;
     var infoWindow;
     var markersMap = {};
+    var markers = [];
     var pyrmont = new google.maps.LatLng(18.5204303, 73.8567437);
     var marker;
     var geocoder = new google.maps.Geocoder();
@@ -160,6 +161,7 @@ jQuery(function($) {
         });
         
         markersMap[placeData.mapId] = marker;
+        markers.push(marker);
         var infoNotAvbl = "Information not available";
         var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(getCashStatus(placeData.cashAvailable))+"<br>";
         if(placeData.cashAvailable != 1){
@@ -253,7 +255,7 @@ jQuery(function($) {
 
         var request = {
             location: latLng,
-            radius: 5000,
+            radius: 2500,
             types: [typeOption]
         };
 
@@ -315,11 +317,13 @@ jQuery(function($) {
         if (infoWindow) {
             infoWindow.close();
         }
-        if (markersMap) {
-            $.each(markersMap, function (markerId, marker) {
+        if (markers) {
+            $.each(markers, function (id, marker) {
                 marker.setVisible(false);
             });
         }
+        markersMap = {};
+        paintedMapid = {};
     }
 
     function clearMarkers(){
@@ -422,6 +426,9 @@ jQuery(function($) {
         //    'Error: The Geolocation service failed.' :
         //    'Error: Your browser doesn\'t support geolocation.');
     //};
+    function clearAllSearch() {
+
+    }
     function showMap(inputLatLong){
         var locationData = {};
         var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';

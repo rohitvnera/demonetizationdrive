@@ -33,7 +33,7 @@ jQuery(function($) {
          $("#cashStatus").on('change', updatePopUp);
         $('input[type=radio][name=type]').on('change', function () {
             clearOverlays();
-            showMap();
+            showMap(map.getCenter());
         });
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');
@@ -490,6 +490,8 @@ jQuery(function($) {
                     }else{
                         marker.setPosition(latlng);
                     }
+
+                    marker.setVisible(false);
                     $('#btn').hide();
                     $('#latitude,#longitude').show();
                     $('#address').val(results[0].formatted_address);

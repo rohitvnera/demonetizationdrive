@@ -33,7 +33,7 @@ jQuery(function($) {
          $("#cashStatus").on('change', updatePopUp);
         $('input[type=radio][name=type]').on('change', function () {
             clearOverlays();
-            showMap(map.getCenter());
+            showMap();
         });
 
         var $portfolio_selectors = $('.portfolio-filter >li>a');
@@ -162,15 +162,39 @@ jQuery(function($) {
         
         markersMap[placeData.mapId] = marker;
         markers.push(marker);
-        var infoNotAvbl = "Information not available";
-        var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(getCashStatus(placeData.cashAvailable))+"<br>";
+        var infoNotAvbl = "Cash availability information not available";
+        var placeOpenStatus = placeData.bankOpenStatus ? "Open Now" : "Closed Now";
+        var placeOpenStatusCss = placeData.bankOpenStatus ? "text-success" : "text-danger";
+        var cashStatusInfo = (getCashStatus(placeData.cashAvailable));
+        var cashAvaibleTimeStatus = "";
+        if(placeData.cashAvailable == 1){
+            cashAvaibleTimeStatus ="Average wait "+avgWaitTimeValueMap[placeData.avgWaitTime];
+        }else if(placeData.cashAvailable == 0){
+            var nextAvailabiltyTime = placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty).toLocaleString() : infoNotAvbl;
+            cashAvaibleTimeStatus = "Next Availability : "+nextAvailabiltyTime;
+        }
+
+        var markerContent = "<div style=''>"
+                            +" <h3><strong>"+placeData.name+"</strong></h3>"
+                            +" <h4 class='text-muted'></h4>"
+                            +" <h5 class='text-muted'>"+placeData.address+"</h5>"
+                            +"<h4 class="+placeOpenStatusCss+">"+placeOpenStatus+"<small> (open: 10AM to 5 PM)</small></h4>"
+                            +"<h4 class="+cashStatusInfo.cashStatusCSS+">"+cashStatusInfo.cashStatus+"</h4>"
+                            +"<h4><strong>"+cashAvaibleTimeStatus+"</strong></h4>"
+                            +"<h5 class='text-muted'>Last Updated on "+new Date(placeData.whenModified).toLocaleString()+"</h5>"                            
+                            +"</div>";
+            markerContent += "<a href='#' id='updateBankButton' class='btn btn-info' data-toggle='modal' data-target='#myModal'>Change Status</a>";
+
+       /* var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(getCashStatus(placeData.cashAvailable))+"<br>";
         if(placeData.cashAvailable != 1){
             markerContent += "<b>Next Availability: </b>"+(placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty) : infoNotAvbl)+"<br>";
         }else{
             markerContent += "<b>Average Waiting Time: </b>"+(placeData.avgWaitTime!= -1 ? avgWaitTimeValueMap[placeData.avgWaitTime] : avgWaitTimeValueMap[29]) +"<br>";
         }
-        markerContent += "<b>Address: </b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open" : "Closed")+"<br>";
+        markerContent += "<b>Address: </b>"+placeData.address+"<br><b> Status:</b>"+(placeData.bankOpenStatus ? "Open Now" : "Closed Now")+"<br>";
+        
         markerContent += "<a href='#' id='updateBankButton' class='btn btn-danger btn-xs' data-toggle='modal' data-target='#myModal'><em class='fa fa-trash'>Update Bank Details</a>";
+        */
         if(!infoWindow){
             infoWindow = new google.maps.InfoWindow({map: map});
             infoWindow.close();
@@ -187,19 +211,25 @@ jQuery(function($) {
         });
     }
 
-
+    function getAverageWaitTimeString(waitTime){
+        switch(waitTime) {
+                case 1:
+                    return {"cashStatus" : "Cash Available", "cashStatusCSS" : "text-success"};
+                case 0:
+                    return {"cashStatus" : "Cash Not Available", "cashStatusCSS" : "text-danger"};
+                default:
+                    return {"cashStatus" : "Cash availability information Not Available", "cashStatusCSS" : "text-warning"};
+            }
+    }
     function getCashStatus(cashStatus) {
-        if(cashStatus) {
             switch(cashStatus) {
                 case 1:
-                    return "Available";
+                    return {"cashStatus" : "Cash Available", "cashStatusCSS" : "text-success"};
                 case 0:
-                    return "Not Available"
+                    return {"cashStatus" : "Cash Not Available", "cashStatusCSS" : "text-danger"};
                 default:
-                    return "Information Not Available";
+                    return {"cashStatus" : "Cash availability information Not Available", "cashStatusCSS" : "text-warning"};
             }
-        }
-        return "Information Not Available";
     }
 
     function processSearchRes(results, typeOption, newMapIds) {
@@ -426,6 +456,9 @@ jQuery(function($) {
         //    'Error: The Geolocation service failed.' :
         //    'Error: Your browser doesn\'t support geolocation.');
     //};
+    function clearAllSearch() {
+
+    }
     function showMap(inputLatLong){
         var locationData = {};
         var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
@@ -457,7 +490,6 @@ jQuery(function($) {
                     }else{
                         marker.setPosition(latlng);
                     }
-                    marker.setVisible(false);
                     $('#btn').hide();
                     $('#latitude,#longitude').show();
                     $('#address').val(results[0].formatted_address);
@@ -509,7 +541,9 @@ jQuery(function($) {
 
                     
                 
-                } 
+                } else {
+                    alert("No results found");
+                }
             } else {
                 alert("Please enable location services");
             }

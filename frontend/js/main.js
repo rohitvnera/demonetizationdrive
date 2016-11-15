@@ -1,11 +1,13 @@
-var currentMarkerId = {};
-var avgWaitTimeValueMap = {
-                            29: 'Less than 30 mins',                                  
-                           59 : 'Less than 1 hour',
-                           119: 'Less than 2 hours',                                  
-                           121 : 'more than 2 hours',
-                        };
+
 jQuery(function($) {
+    var currentMarkerId = {};
+    var paintedMapid = {};
+    var avgWaitTimeValueMap = {
+        29: 'Less than 30 mins',
+        59 : 'Less than 1 hour',
+        119: 'Less than 2 hours',
+        121 : 'more than 2 hours',
+    };
     var map;
     var infoWindow;
     var markersArray = [];
@@ -239,11 +241,17 @@ jQuery(function($) {
                             data:JSON.stringify(mapList),
                             contentType: 'application/json',
                             success: function(response){
-                                clearOverlays();
-                                for (var i = 0; i < response.length; i++) {
-                                    atmBankMap[response[i].mapId].html_attributions='';
-                                    createMarker(atmBankMap[response[i].mapId], icon, response[i]);
-                                }
+                                //clearOverlays();
+                                var newMapIds = {};
+                                $.each(response, function(ind, data){
+                                    newMapIds[data.mapId] = true;
+                                    if (paintedMapid[data.mapId]) {
+                                        return true;
+                                    }
+                                    atmBankMap[data.mapId].html_attributions='';
+                                    createMarker(atmBankMap[data.mapId], icon, data);
+                                });
+                                paintedMapid = newMapIds;
                             }});
                       }
                     });
@@ -252,10 +260,6 @@ jQuery(function($) {
             });
         }
      }
-
-    function onUpdateBank(){
-
-    }
 
     function saveMapData(dataList){
 

@@ -514,7 +514,7 @@ jQuery(function($) {
             var marker = markersMap[markerId];
             marker.setVisible(false);
             var data = {
-                "cashAvailable": status ? 0 : 1,
+                "cashAvailable": status == true ? 0 : 1,
                 "avgWaitTime": waitTime,
                 "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
                 "mapId": markerId

@@ -2544,7 +2544,7 @@ shortcodes page css
 #address {
   background-color: #fff;
   font-family: Roboto;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 300;
   margin-left: 12px;
   padding: 0 11px 0 13px;
@@ -2587,9 +2587,4 @@ h1 {
   position: relative;
   color: aliceblue;
   padding-left: 10px;
-}
-
-body {
-  overflow: hidden;
-  height: 100%;
 }

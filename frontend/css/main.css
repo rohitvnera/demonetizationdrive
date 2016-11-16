@@ -2546,10 +2546,10 @@ shortcodes page css
   font-family: Roboto;
   font-size: 16px;
   font-weight: 300;
-  margin-left: 12px;
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
-  width: 300px;
+  max-width: 300px;
+  width: 100%;
 }
 
 #pac-input:focus {
@@ -2578,6 +2578,9 @@ shortcodes page css
   text-align: center;
   position: relative;
   z-index: 10;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
 }
 
 h1 {
@@ -2587,4 +2590,18 @@ h1 {
   position: relative;
   color: aliceblue;
   padding-left: 10px;
+}
+
+#search-text {
+  display: inline-block;
+  width: 70%;
+  max-width: 300px;
+  height: 32px;
+}
+
+#searchclear {
+  color: lightgrey;
+  float: right;
+  top: -22px;
+  right: 2px;
 }

@@ -25,6 +25,7 @@ jQuery(function($) {
 
 
     $(function(){
+        debugger;
         firstLoad();
         $('#okBtn').on('click', onOk);
         $('#updateBankButton').on('click', onUpdateModal);
@@ -171,7 +172,8 @@ jQuery(function($) {
             icon: icon,
             visible:true
         });
-        
+
+        marker.type = type;
         markersMap[placeData.mapId] = marker;
         markers.push(marker);
         var infoNotAvbl = "Cash availability information not available";
@@ -514,7 +516,8 @@ jQuery(function($) {
                 "cashAvailable": status == true ? 0 : 1,
                 "avgWaitTime": waitTime,
                 "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
-                "mapId": markerId
+                "mapId": markerId,
+                "type": marker.type
             };
             onOk(data, marker);
     }

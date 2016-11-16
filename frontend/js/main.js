@@ -184,13 +184,11 @@ jQuery(function($) {
                                 +" <h3><strong>"+placeData.name+"</strong></h3>"
                                 +" <h4 class='text-muted'></h4>"
                                 +" <h5 class='text-muted'>"+placeData.address+"</h5>"
-                                +"<div id='cashStatusDiv' class='row'>"
-                                    +"<div class='col-sm-4'>"
+                                +"<div id='cashStatusDiv'>"                                    
                                         +"<h4 class="+cashStatusInfo.cashStatusCSS+">"+cashStatusInfo.cashStatus+"</h4>"
-                                        +"<h4><strong>"+cashAvaibleTimeStatus+"</strong></h4>"
-                                    +"</div><div class='col-sm-2'>"
+                                        +"<h4><strong>"+cashAvaibleTimeStatus+"</strong></h4>"                                    
                                         +"<a href='#' id='updateBankButton' class='btn btn-info'>Change Status</a>"
-                                +"</div></div>"
+                                +"</div>"
                                 +"<h5 class='text-muted'>Last Updated on "+new Date(placeData.whenModified).toLocaleString()+"</h5></div>"
                                 +updateDetailsForm                            
                             +"</div>";

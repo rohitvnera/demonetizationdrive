@@ -174,7 +174,6 @@ jQuery(function($) {
                             +" <h3><strong>"+placeData.name+"</strong></h3>"
                             +" <h4 class='text-muted'></h4>"
                             +" <h5 class='text-muted'>"+placeData.address+"</h5>"
-                            +"<h4 class="+placeOpenStatusCss+">"+placeOpenStatus+"<small> (open: 10AM to 5 PM)</small></h4>"
                             +"<h4 class="+cashStatusInfo.cashStatusCSS+">"+cashStatusInfo.cashStatus+"</h4>"
                             +"<h4><strong>"+cashAvaibleTimeStatus+"</strong></h4>"
                             +"<h5 class='text-muted'>Last Updated on "+new Date(placeData.whenModified).toLocaleString()+"</h5>"                            

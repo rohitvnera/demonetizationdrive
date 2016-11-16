@@ -1,7 +1,12 @@
 
 jQuery(function($) {
-    var currentMarkerId = {'markerEvent' : false};
     var paintedMapid = {};
+
+    var currentMarkerId = {
+                        'markerEvent' : false,
+                        'updateDetailsForm' : ""
+                    };
+    var markersMap = {};
     var avgWaitTimeValueMap = {
         15 : 'Immediate',
         30: '30 mins',
@@ -11,11 +16,12 @@ jQuery(function($) {
     };
     var map;
     var infoWindow;
-    var markersMap = {};
+   
     var markers = [];
     var pyrmont = new google.maps.LatLng(18.5204303, 73.8567437);
     var marker;
     var geocoder = new google.maps.Geocoder();
+
 
     $(function(){
         firstLoad();
@@ -76,6 +82,12 @@ jQuery(function($) {
     $("a[rel^='prettyPhoto']").prettyPhoto({
         social_tools: false
     });
+
+    function changeDetails(){
+    $('#updateDetailsContainer').addClass('show').removeClass('hidden');
+    $('#cashStatusDiv').addClass('hidden').removeClass('show');
+    $('#lastUpdatedStatus').addClass('hidden').removeClass('show');
+}
 
     // var waypoints = [];
     function firstLoad() {
@@ -162,23 +174,26 @@ jQuery(function($) {
         markersMap[placeData.mapId] = marker;
         markers.push(marker);
         var infoNotAvbl = "Cash availability information not available";
-        var placeOpenStatus = placeData.bankOpenStatus ? "Open Now" : "Closed Now";
-        var placeOpenStatusCss = placeData.bankOpenStatus ? "text-success" : "text-danger";
         var cashStatusInfo = (getCashStatus(placeData.cashAvailable));
         var cashAvaibleTimeStatus = "";
         if(placeData.cashAvailable == 1 && placeData.avgWaitTime > 0){
            cashAvaibleTimeStatus ="Average wait "+ placeData.avgWaitTime +" Mins";
         }
-
-        var markerContent = "<div style=''>"
-                            +" <h3><strong>"+placeData.name+"</strong></h3>"
-                            +" <h4 class='text-muted'></h4>"
-                            +" <h5 class='text-muted'>"+placeData.address+"</h5>"
-                            +"<h4 class="+cashStatusInfo.cashStatusCSS+">"+cashStatusInfo.cashStatus+"</h4>"
-                            +"<h4><strong>"+cashAvaibleTimeStatus+"</strong></h4>"
-                            +"<h5 class='text-muted'>Last Updated on "+new Date(placeData.whenModified).toLocaleString()+"</h5>"                            
+        var updateDetailsForm = getUpdateDetailsFormFields();
+        var markerContent = "<div style=''><div>"
+                                +" <h3><strong>"+placeData.name+"</strong></h3>"
+                                +" <h4 class='text-muted'></h4>"
+                                +" <h5 class='text-muted'>"+placeData.address+"</h5>"
+                                +"<div id='cashStatusDiv' class='row'>"
+                                    +"<div class='col-sm-4'>"
+                                        +"<h4 class="+cashStatusInfo.cashStatusCSS+">"+cashStatusInfo.cashStatus+"</h4>"
+                                        +"<h4><strong>"+cashAvaibleTimeStatus+"</strong></h4>"
+                                    +"</div><div class='col-sm-2'>"
+                                        +"<a href='#' id='updateBankButton' class='btn btn-info'>Change Status</a>"
+                                +"</div></div>"
+                                +"<h5 class='text-muted'>Last Updated on "+new Date(placeData.whenModified).toLocaleString()+"</h5></div>"
+                                +updateDetailsForm                            
                             +"</div>";
-            markerContent += "<a href='#' id='updateBankButton' class='btn btn-info' data-toggle='modal' data-target='#myModal'>Change Status</a>";
 
        /* var  markerContent = "<b>Name: </b>"+placeData.name+"<br><b>Cash Status: </b>"+(getCashStatus(placeData.cashAvailable))+"<br>";
         if(placeData.cashAvailable != 1){
@@ -194,6 +209,7 @@ jQuery(function($) {
             infoWindow = new google.maps.InfoWindow({map: map});
             infoWindow.close();
         }
+        var me = this;
         google.maps.event.addListener(marker, 'click', function() {
             currentMarkerId['markerEvent'] = true;
             infoWindow.setContent(markerContent);
@@ -203,9 +219,51 @@ jQuery(function($) {
             currentMarkerId['avgWaitTime'] = placeData.avgWaitTime;
             currentMarkerId['nextAvailabilty'] = placeData.nextAvailabilty;
             onUpdateModal();
+            $('#updateBankButton').on('click', changeDetails);
+            $('#cashAvailableStatus').on('click', updateAvailableStatus);
+            $('#cashNotAvailableStatus').on('click', updateNotAvailableStatus);
+            $('#submitCashAvailibity').on('click', submitAvailableStatus);
+            $('#cancelInfoWindow').on('click', cancelAvailableStatus);
         });
     }
-
+    
+    function getUpdateDetailsFormFields(){
+        if(currentMarkerId['updateDetailsForm'] == ""){
+            var updateDetailForm = "<div class='hidden' id='updateDetailsContainer'>"
+                                        +"<h5>Select cash status</h5>"
+                                        +"<div class='btn-group btn-group-lg' role='group' aria-label='...'>"
+                                            +"<div class='btn-group' role='group'>"
+                                                  +"<a href='#' id='cashAvailableStatus' class='btn btn-success'>Cash Available</a>"
+                                            +"</div>"
+                                            +"<div class='btn-group' role='group'>"
+                                                  +"<a href='#' id='cashNotAvailableStatus' class='btn btn-danger'>Cash Not Available</a>"
+                                            +"</div>"      
+                                        +"</div>"
+                                        +"<div id='avgWaitTimeSubmitDiv' class='hidden'>"
+                                            +"<div id='avgWaitTimeDiv' class='form-group show'>"
+                                                    +"<label for='avgWaitTimeField'>Average wait time</label>"
+                                                    +"<select class='form-control' id='avgWaitTimeField'>"
+                                                         +"<option value=15 selected='selected'>Immediate</option>"   
+                                                         +"<option value=30>30 mins</option>"
+                                                         +"<option value=60>1 hour</option>"
+                                                         +"<option value=120>2 hours</option>"
+                                                         +"<option value=121>2 hours</option>"
+                                                    +"</select>"
+                                            +"</div>"
+                                            +"<div id='' class='row'>"
+                                                    +"<div class='col-xs-2'>"
+                                                        +"<a href='#' id='submitCashAvailibity' class='btn btn-info' >Submit</a>"
+                                                    +"</div>"
+                                                    +"<div class='col-xs-2'>"
+                                                       +"<a href='#' id='cancelInfoWindow' class='btn btn-default'>Cancel</a>"
+                                                    +"</div>"
+                                                +"</div>"
+                                        +"</div>"
+                                    +"</div>";
+            currentMarkerId['updateDetailsForm'] = updateDetailForm;
+        }
+        return currentMarkerId['updateDetailsForm'];
+    }
     function getAverageWaitTimeString(waitTime){
         switch(waitTime) {
                 case 1:
@@ -366,19 +424,7 @@ jQuery(function($) {
 
         }
     }
-    function onOk(){
-        var cashStatus = Number($("#cashStatus").val());
-        var waitTime = $("#avgWaitTime").val() > 0 ? Number($("#avgWaitTime").val()) : 29;
-        var nextAvblTime = $("#nxtAvblDateTime").val() ? $("#nxtAvblDateTime").val() : null;
-        var markerId = currentMarkerId['mapId'];
-        var marker = markersMap[markerId];
-        marker.setVisible(false);
-        var data = {
-            "cashAvailable": cashStatus,
-            "avgWaitTime": waitTime,
-            "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
-            "mapId": markerId
-        };
+    function onOk(data, marker){
         $.ajax({
             url: "/api/findbank/ws/findbank/update2",
             //crossDomain: true,
@@ -454,6 +500,34 @@ jQuery(function($) {
     function clearAllSearch() {
 
     }
+
+    function updateNotAvailableStatus(){
+        submitAvailableStatus(true);
+    }
+    function updateAvailableStatus(){
+        $('#avgWaitTimeSubmitDiv').addClass('show').removeClass('hidden');
+        //$('#cashStatusDiv').addClass('hidden').removeClass('show');
+    }
+    function submitAvailableStatus(status){
+         var cashStatus = Number($("#cashStatus").val());
+            var waitTime = $("#avgWaitTimeField").val() > 0 ? Number($("#avgWaitTime").val()) : 15;
+            var nextAvblTime =  null;
+            var markerId = currentMarkerId['mapId'];
+            var marker = markersMap[markerId];
+            marker.setVisible(false);
+            var data = {
+                "cashAvailable": status ? 0 : 1,
+                "avgWaitTime": waitTime,
+                "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,
+                "mapId": markerId
+            };
+            onOk(data, marker);
+    }
+
+    function cancelAvailableStatus(){
+        infoWindow.close();
+    }
+
     function showMap(inputLatLong){
         var locationData = {};
         var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
@@ -485,7 +559,6 @@ jQuery(function($) {
                     }else{
                         marker.setPosition(latlng);
                     }
-
                     marker.setVisible(false);
                     $('#btn').hide();
                     $('#latitude,#longitude').show();

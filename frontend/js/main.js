@@ -180,7 +180,7 @@ jQuery(function($) {
            cashAvaibleTimeStatus ="Average wait "+ placeData.avgWaitTime +" Mins";
         }
         var updateDetailsForm = getUpdateDetailsFormFields();
-        var markerContent = "<div style=''><div>"
+        var markerContent = "<div><div>"
                                 +" <h3><strong>"+placeData.name+"</strong></h3>"
                                 +" <h4 class='text-muted'></h4>"
                                 +" <h5 class='text-muted'>"+placeData.address+"</h5>"
@@ -247,15 +247,10 @@ jQuery(function($) {
                                                          +"<option value=120>2 hours</option>"
                                                          +"<option value=121>More than 2 hours</option>"
                                                     +"</select>"
-                                            +"</div>"
-                                            +"<div id='' class='row'>"
-                                                    +"<div class='col-xs-2'>"
-                                                        +"<a href='#' id='submitCashAvailibity' class='btn btn-info' >Submit</a>"
-                                                    +"</div>"
-                                                    +"<div class='col-xs-2'>"
-                                                       +"<a href='#' id='cancelInfoWindow' class='btn btn-default'>Cancel</a>"
-                                                    +"</div>"
-                                                +"</div>"
+                                            +"</div> <div class='btn-toolbar'>"
+                                            +"<a href='#' id='submitCashAvailibity' class='btn btn-info' >Submit</a>"
+                                            +"<a href='#' id='cancelInfoWindow' class='btn btn-default'>Cancel</a></div>"
+                                                    
                                         +"</div>"
                                     +"</div>";
             currentMarkerId['updateDetailsForm'] = updateDetailForm;

@@ -12,7 +12,8 @@ jQuery(function($) {
         30: '30 mins',
         60 : '1 hour',
         120: '2 hours',
-        121 : 'More than 2 hours'
+        240 : '4 hours',
+        241 : 'More than 4 hours'
     };
     var map;
     var infoWindow;
@@ -245,7 +246,8 @@ jQuery(function($) {
                                                          +"<option value=30>30 mins</option>"
                                                          +"<option value=60>1 hour</option>"
                                                          +"<option value=120>2 hours</option>"
-                                                         +"<option value=121>More than 2 hours</option>"
+                                                         +"<option value=240>4 hours</option>"
+                                                         +"<option value=241>More than 4 hours</option>"
                                                     +"</select>"
                                             +"</div> <div class='btn-toolbar'>"
                                             +"<a href='#' id='submitCashAvailibity' class='btn btn-info' >Submit</a>"

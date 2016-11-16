@@ -17,7 +17,6 @@ jQuery(function($) {
     var marker;
     var geocoder = new google.maps.Geocoder();
 
-
     $(function(){
         firstLoad();
         $('#okBtn').on('click', onOk);
@@ -167,11 +166,8 @@ jQuery(function($) {
         var placeOpenStatusCss = placeData.bankOpenStatus ? "text-success" : "text-danger";
         var cashStatusInfo = (getCashStatus(placeData.cashAvailable));
         var cashAvaibleTimeStatus = "";
-        if(placeData.cashAvailable == 1){
-            cashAvaibleTimeStatus ="Average wait "+avgWaitTimeValueMap[placeData.avgWaitTime];
-        }else if(placeData.cashAvailable == 0){
-            var nextAvailabiltyTime = placeData.nextAvailabilty ? new Date(placeData.nextAvailabilty).toLocaleString() : infoNotAvbl;
-            cashAvaibleTimeStatus = "Next Availability : "+nextAvailabiltyTime;
+        if(placeData.cashAvailable == 1 && placeData.avgWaitTime > 0){
+           cashAvaibleTimeStatus ="Average wait "+ placeData.avgWaitTime +" Mins";
         }
 
         var markerContent = "<div style=''>"

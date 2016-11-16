@@ -245,7 +245,7 @@ jQuery(function($) {
                                                          +"<option value=30>30 mins</option>"
                                                          +"<option value=60>1 hour</option>"
                                                          +"<option value=120>2 hours</option>"
-                                                         +"<option value=121>2 hours</option>"
+                                                         +"<option value=121>More than 2 hours</option>"
                                                     +"</select>"
                                             +"</div>"
                                             +"<div id='' class='row'>"

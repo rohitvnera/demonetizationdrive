@@ -506,15 +506,14 @@ jQuery(function($) {
         $('#avgWaitTimeSubmitDiv').addClass('show').removeClass('hidden');
         //$('#cashStatusDiv').addClass('hidden').removeClass('show');
     }
-    function (status){
-        debugger;
+    function submitAvailableStatus(status){
          var cashStatus = Number($("#cashStatus").val());
             var waitTime = $("#avgWaitTimeField").val() > 0 ? Number($("#avgWaitTimeField").val()) : 15;
             var nextAvblTime =  null;
             var markerId = currentMarkerId['mapId'];
             var marker = markersMap[markerId];
             marker.setVisible(false);
-            var data = {submitAvailableStatus
+            var data = {
                 "cashAvailable": status ? 0 : 1,
                 "avgWaitTime": waitTime,
                 "nextAvailabilty": nextAvblTime ? new Date(nextAvblTime).getTime() : null,

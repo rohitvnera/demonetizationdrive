@@ -25,7 +25,6 @@ jQuery(function($) {
 
 
     $(function(){
-        debugger;
         firstLoad();
         $('#okBtn').on('click', onOk);
         $('#updateBankButton').on('click', onUpdateModal);

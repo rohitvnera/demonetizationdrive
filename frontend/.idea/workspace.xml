@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9d0092ba-a07a-4bff-abc3-d41a90b762ef" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="frontend.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,8 +44,8 @@
       <file leaf-file-name="main.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2781457">
-              <caret line="2525" column="0" selection-start-line="2525" selection-start-column="0" selection-end-line="2525" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.35320088">
+              <caret line="2529" column="14" selection-start-line="2529" selection-start-column="14" selection-end-line="2529" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -440,8 +438,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2781457">
-          <caret line="2525" column="0" selection-start-line="2525" selection-start-column="0" selection-end-line="2525" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.35320088">
+          <caret line="2529" column="14" selection-start-line="2529" selection-start-column="14" selection-end-line="2529" selection-end-column="14" />
           <folding />
         </state>
       </provider>

@@ -548,8 +548,8 @@ jQuery(function($) {
                             map: map,
                             icon: markerImage,
                             draggable: true ,
-                            animation: google.maps.Animation.DROP,
-                            
+                            gestureHandling: 'greedy',
+                            animation: google.maps.Animation.DROP
                         }); 
                     }else{
                         marker.setPosition(latlng);

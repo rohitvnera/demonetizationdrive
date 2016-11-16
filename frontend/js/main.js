@@ -223,6 +223,8 @@ jQuery(function($) {
             $('#cashNotAvailableStatus').on('click', updateNotAvailableStatus);
             $('#submitCashAvailibity').on('click', submitAvailableStatus);
             $('#cancelInfoWindow').on('click', cancelAvailableStatus);
+            // Add when marker clicked
+            ga('send', 'pageview', 'View Details');
         });
     }
     
@@ -463,6 +465,8 @@ jQuery(function($) {
 
             map.setCenter(place.geometry.location);
             showMap();
+            // Add when search intiated by search box
+            ga('send', 'pageview', 'Search Box Search');
             //// If the place has a geometry, then present it on a map.
             //if (place.geometry.viewport) {
             //    map.fitBounds(place.geometry.viewport);
@@ -499,12 +503,20 @@ jQuery(function($) {
 
     function updateNotAvailableStatus(){
         submitAvailableStatus(true);
+        // Add when marker clicked
+        ga('send', 'pageview', 'No Cash');
+
     }
     function updateAvailableStatus(){
         $('#avgWaitTimeSubmitDiv').addClass('show').removeClass('hidden');
         //$('#cashStatusDiv').addClass('hidden').removeClass('show');
     }
     function submitAvailableStatus(status){
+        if(status != true)
+        {
+             // Add when update clicked
+            ga('send', 'pageview', 'Cash Available');
+        }
          var cashStatus = Number($("#cashStatus").val());
             var waitTime = $("#avgWaitTimeField").val() > 0 ? Number($("#avgWaitTimeField").val()) : 15;
             var nextAvblTime =  null;
@@ -595,6 +607,8 @@ jQuery(function($) {
                         if(!currentMarkerId['markerEvent']){
                             marker.setPosition(map.getCenter());
                             search_types(map.getCenter());
+                            // Add when search intiated by map move
+                            ga('send', 'pageview', 'Map Move Search');
                         }
                          currentMarkerId['markerEvent']  = false;
                       });

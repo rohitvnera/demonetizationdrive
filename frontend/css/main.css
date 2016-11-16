@@ -2527,7 +2527,7 @@ shortcodes page css
 #map {
     position: absolute;
     width: 100%;
-    height: 95%;
+    height: 100%;
 }
 
 .controls {
@@ -2587,4 +2587,9 @@ h1 {
   position: relative;
   color: aliceblue;
   padding-left: 10px;
+}
+
+body {
+  overflow: hidden;
+  height: 100%;
 }

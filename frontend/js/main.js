@@ -95,7 +95,8 @@ jQuery(function($) {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,
             zoom: 15,
-            mapTypeControl: false
+            mapTypeControl: false,
+            fullscreenControl: false
         });
         //infoWindow = new google.maps.InfoWindow({map: map});
         initMap();

@@ -619,6 +619,7 @@ jQuery(function($) {
                             marker.setPosition(map.getCenter())
                             map.setCenter(event.latLng);
                             search_types(map.getCenter());
+                            infoWindow.close();
                     });
 
                     

@@ -15,6 +15,7 @@
     <link href="css/prettyPhoto.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
     <link href="css/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/trip.min.css"/>
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
@@ -35,18 +36,6 @@
       ga('send', 'pageview', 'Index');
 
     </script>
-    <script src="js/chaperone.js" ></script>
-    <script >
-      Chaperone.init({
-      "api_key": "7OyEcGGS2iFGYA",
-      "tutorial": 2308,
-      "target_url": {
-        "rule": "contains",
-        "path": "indiafindbank.in/"
-      }
-    });
-    </script>
-
 </head><!--/head-->
 
 <body class="homepage">
@@ -114,6 +103,7 @@
                 <!--<label for="changetype-geocode">Geocodes</label>-->
             </div>
         </div>
+         <div id="search-input1"></div>
         <input type="text" id="latitude" style="display:none;" placeholder="Latitude"/>
         <input type="text" id="longitude" style="display:none;" placeholder="Longitude"/>
        <!-- <input type="button"  id="hide_btn" value="hide markers" onClick="clearMarkers();" />-->
@@ -187,7 +177,8 @@
         </div>
     </div>
 
-    <script src="js/jquery.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/trip.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/jquery.isotope.min.js"></script>

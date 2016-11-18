@@ -22,8 +22,14 @@ jQuery(function($) {
     var pyrmont = new google.maps.LatLng(18.5204303, 73.8567437);
     var marker;
     var geocoder = new google.maps.Geocoder();
-
-
+    var tripToShowNavigation = new Trip([
+            { sel : $("#search-input1"), content : "<div><img src='../images/bank_duniya_img/Screen_3.jpg' alt='Smiley face' class='img-responsive' alt='Cinque Terre' width='260' height='280'></div>", position : "s", expose: true}
+        ], {
+                tripTheme : "white",
+                showNavigation : true,
+                showCloseBox : true,
+                delay : -1
+        });
     $(function(){
         firstLoad();
         $('#okBtn').on('click', onOk);
@@ -91,6 +97,14 @@ jQuery(function($) {
 
     // var waypoints = [];
     function firstLoad() {
+        var userVisitCountCookie = $.cookie('userVisitCount');
+        if(typeof userVisitCountCookie == "undefined" || userVisitCountCookie == "null" || userVisitCountCookie == ""){
+            tripToShowNavigation.start();
+            $.cookie('userVisitCount', 1);
+        }else{
+            $.cookie('userVisitCount', Number(userVisitCountCookie)+1);
+        }
+        
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: pyrmont,

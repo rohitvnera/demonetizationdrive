@@ -124,25 +124,24 @@ jQuery(function($) {
 
         // Set CSS for the control border.
         var controlUI = document.createElement('div');
-        controlUI.style.backgroundColor = '#4d90fe';
+        controlUI.style.backgroundColor = '#fff';
         controlUI.style.borderRadius = '3px';
         controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
         controlUI.style.cursor = 'pointer';
-        controlUI.style.marginBottom = '22px';
+        controlUI.style.marginBottom = '10px';
+        controlUI.style.marginRight = '10px';
         controlUI.style.textAlign = 'center';
         controlUI.title = 'Search on your current location';
         controlDiv.appendChild(controlUI);
 
         // Set CSS for the control interior.
         var controlText = document.createElement('div');
-        controlText.style.color = '#fff';
-        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-        controlText.style.fontSize = '12px';
-        controlText.style.fontWeight = 'bold';
-        controlText.style.lineHeight = '30px';
-        controlText.style.paddingLeft = '5px';
-        controlText.style.paddingRight = '5px';
-        controlText.innerHTML = 'Search My Location';
+        var controlImage = document.createElement('img');
+        controlImage.src = "images/bank_duniya_img/locate_black.png";
+
+        controlText.width = '40px';
+        controlText.height = '40px';
+        controlUI.appendChild(controlImage);
         controlUI.appendChild(controlText);
 
         // Setup the click event listeners: simply set the map to Chicago.
@@ -564,7 +563,7 @@ jQuery(function($) {
           var centerControl = new CenterControl(centerControlDiv);
 
           centerControlDiv.index = 1;
-          map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
+          map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerControlDiv);
     }
 
     //function handleLocationError(browserHasGeolocation, //infoWindow, pos) {

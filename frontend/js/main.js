@@ -168,7 +168,7 @@ jQuery(function($) {
                             position: pos, 
                             map: map,
                             icon: markerImage,
-                            draggable: true ,
+                            draggable: false ,
                             animation: google.maps.Animation.DROP,
                             
                         });  

@@ -19,8 +19,11 @@ jQuery(function($) {
     var infoWindow;
    
     var markers = [];
+    var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
+    var markerImage = new google.maps.MarkerImage(imageUrl,new google.maps.Size(24, 32));
     var pyrmont = new google.maps.LatLng(18.5204303, 73.8567437);
     var marker;
+    var currentLocaitonMarker;
     var geocoder = new google.maps.Geocoder();
     var tripToShowNavigation = new Trip([
             { sel : $("#search-input1"), content : "<div><img src='../images/bank_duniya_img/Screen_3.jpg' alt='Smiley face' class='img-responsive' alt='Cinque Terre' width='260' height='280'></div>", position : "s", expose: true}
@@ -114,16 +117,66 @@ jQuery(function($) {
         });
         //infoWindow = new google.maps.InfoWindow({map: map});
         initMap();
+        getCurrentLocation();
+       }
 
-        // Try HTML5 geolocation.
+    function CenterControl(controlDiv, map) {
+
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = '#4d90fe';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginBottom = '22px';
+        controlUI.style.textAlign = 'center';
+        controlUI.title = 'Search on your current location';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.color = '#fff';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlText.style.fontSize = '12px';
+        controlText.style.fontWeight = 'bold';
+        controlText.style.lineHeight = '30px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        controlText.innerHTML = 'Search My Location';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: simply set the map to Chicago.
+        controlUI.addEventListener('click', function() {
+            getCurrentLocation();
+        });
+
+    }
+
+    function getCurrentLocation(){
+
+         // Try HTML5 geolocation.
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 var pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-
+                //var latlng = new google.maps.LatLng(latitude, longitude);
                 //infoWindow.setPosition(pos);
+                if(!currentLocaitonMarker){
+
+                        currentLocaitonMarker = new google.maps.Marker({
+                            position: pos, 
+                            map: map,
+                            icon: markerImage,
+                            draggable: true ,
+                            animation: google.maps.Animation.DROP,
+                            
+                        });  
+                    }else{
+                        currentLocaitonMarker.setPosition(pos);
+                    }
+
                 map.setCenter(pos);
                 showMap(pos);
             }, function() {
@@ -135,8 +188,7 @@ jQuery(function($) {
             //handleLocationError(false, //infoWindow, map.getCenter());
             showMap();
         }
-       }
-
+    }
      function onUpdateModal(){
         var cashStatus = $("#cashStatus").val(Number(currentMarkerId['cashAvailable']));
         var waitTime =  $("#avgWaitTime").val(Number(currentMarkerId['avgWaitTime'] ? currentMarkerId['avgWaitTime'] : 15));
@@ -504,6 +556,15 @@ jQuery(function($) {
             //infoWindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             //infoWindow.open(map, marker);
         });
+
+
+          // Create the DIV to hold the control and call the CenterControl()
+          // constructor passing in this DIV.
+          var centerControlDiv = document.createElement('div');
+          var centerControl = new CenterControl(centerControlDiv);
+
+          centerControlDiv.index = 1;
+          map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
     }
 
     //function handleLocationError(browserHasGeolocation, //infoWindow, pos) {
@@ -554,8 +615,7 @@ jQuery(function($) {
 
     function showMap(inputLatLong){
         var locationData = {};
-        var imageUrl = 'https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
-        var markerImage = new google.maps.MarkerImage(imageUrl,new google.maps.Size(24, 32));
+        
         if (!inputLatLong) {
             var addresFromSearch = $('#address').val();
             locationData.address = addresFromSearch;

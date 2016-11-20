@@ -121,9 +121,7 @@ public class FacebookUtil {
                         userFriend.setFriendId(friendUUID.getUuid());
                         dataAccess.create(userFriend);
                     } else {
-                        System.out.println(String.format("Friend [%s] already exist for user [%s]",
-                                friendUUID.getUuid(),
-                                fbUserId));
+
                     }
                 } catch (DataAccessException e) {
                     e.printStackTrace();

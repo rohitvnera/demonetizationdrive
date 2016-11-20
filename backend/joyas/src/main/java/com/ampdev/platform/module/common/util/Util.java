@@ -325,7 +325,6 @@ public class Util {
             else
                 retString = msgFormat.format(formatTextContent(dynamicValues));
         } catch (Exception e) {
-            System.out.println("Exception while formating the message" + msgStr);
             e.printStackTrace();
         }
         return retString;

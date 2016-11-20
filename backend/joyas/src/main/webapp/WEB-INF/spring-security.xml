@@ -6,40 +6,7 @@
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 
-	<http pattern="/ws/login" security="none" />
-	<http pattern="/ws/signup" security="none" />
-	<http pattern="/ws/test" security="none" />
-	<http pattern="/ws/social/fb/login" security="none" />
-	<http pattern="/ws/social/fb/signup" security="none" />
-	<http pattern="/ws/movie/getrecentupcoming" security="none" />
-	<http pattern="/ws/movie/getrecent" security="none" />
-	<http pattern="/ws/movie/getupcoming" security="none" />
-	<http pattern="/ws/movie/getrecentupcoming/ids" security="none" />
-	<http pattern="/ws/omdbmovie/getmovies/**" security="none" />
-	<http pattern="/ws/movie/getmovies/**" security="none" />
-	<http pattern="/ws/movie/critic/review/movie/**" security="none" />
-	<http pattern="/ws/omdbmovie/recent/**" security="none" />
-	<http pattern="/ws/omdbmovie/upcoming/**" security="none" />
-	<http pattern="/ws/omdbmovie/recentupcoming/**" security="none" />
-	<http pattern="/ws/event/friend/**" security="none" />
-	<http pattern="/ws/news/**" security="none" />
-	<http pattern="/ws/file/" security="none" />
-	<http pattern="/ws/file/**" security="none" />
-	<http pattern="/ws/tictactoe/**" security="none" />
-	<http pattern="/ws/tictactoe/user/login"  security="none"/>
-	<http pattern="/ws/tictactoe/**/add"  authentication-manager-ref="authenticationManager"
-		  entry-point-ref="restServicesEntryPoint" create-session="stateless">
-		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
-	</http>
-	<http pattern="/ws/tictactoe/**/update" authentication-manager-ref="authenticationManager"
-		  entry-point-ref="restServicesEntryPoint" create-session="stateless">
-		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
-	</http>
-	<http pattern="/ws/findbank/**" security="none" />
-	<http pattern="/ws/**" authentication-manager-ref="authenticationManager"
-		entry-point-ref="restServicesEntryPoint" create-session="stateless">
-		<custom-filter ref="restTokenServicesFilter" before="PRE_AUTH_FILTER" />
-	</http>
+	<http pattern="/ws/**" security="none" />
 
 	<!-- Entry point for REST service. -->
 	<beans:bean id="restServicesEntryPoint"

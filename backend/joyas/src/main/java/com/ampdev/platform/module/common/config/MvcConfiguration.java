@@ -89,7 +89,6 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        System.out.println("Avinash configure Jackson Object Mapper");
         converters.add(jacksonMessageConverter());
         super.configureMessageConverters(converters);
     }

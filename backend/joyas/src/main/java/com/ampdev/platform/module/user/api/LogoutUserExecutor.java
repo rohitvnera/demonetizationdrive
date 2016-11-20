@@ -28,7 +28,6 @@ public class LogoutUserExecutor extends DeleteExecutor<UserData, String>
 	public ResponseEntity<String> executeBusinessLogic(RequestEntity<UserData> requestEntity) throws ExecutorException
 	{
 		List<String> tokens = requestEntity.getHeaders().get(TokenAuthenticationFilter.HEADER_TOKEN);
-		System.out.println("Tokens: " + tokens);
 		ResponseEntity<String> responseEntity = null;
 		if (Util.isEmpty(tokens))
 		{

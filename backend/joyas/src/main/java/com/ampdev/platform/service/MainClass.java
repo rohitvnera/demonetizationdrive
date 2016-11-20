@@ -29,7 +29,6 @@ public class MainClass {
         BigInteger value = BigInteger.ZERO
                 .setBit(bits)
                 .subtract(BigInteger.ONE);
-       System.out.println(bits + ": " + value);  // Prints 7 == 111 in binary
         return value.intValue();
     }
 
@@ -43,7 +42,6 @@ public class MainClass {
             }
         }
         Collections.sort(sols);
-        System.out.println("Soltuion:" + sols);
     }
 
     private static void test() throws FileNotFoundException {
@@ -56,11 +54,8 @@ public class MainClass {
 
     private static void testSubstring() {
         final String path = "/Users/Avi/my/repo/joyas/backend/joyas/joyas/src/main/java/com/ampdev/platform/service/.MainClass.java.jln_hide_image";
-        System.out.println(path);
         String name = FilenameUtils.getBaseName(path);
         final String onlyPath = FilenameUtils.getPath(path);
-        System.out.println(onlyPath);
-        System.out.println(name.substring(1));
     }
 
     public static String getHidePath(String pathString) {

@@ -24,10 +24,8 @@ public class ServiceResource
 	@RequestMapping(value = "/start", method = RequestMethod.GET)
 	public String start()
 	{
-		System.out.println("Init Startup servlet");
 		Set<Service> services = new HashSet<>();
 		manager = new ServiceManager(services);
-		System.out.println("Start all services");
 		manager.startAsync();
 
 		return "Start";

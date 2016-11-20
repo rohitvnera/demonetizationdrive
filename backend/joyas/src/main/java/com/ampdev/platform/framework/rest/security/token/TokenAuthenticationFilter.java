@@ -75,7 +75,6 @@ public final class TokenAuthenticationFilter extends GenericFilterBean
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 		ServletException
 	{
-		System.out.println(" *** MyAuthenticationFilter.doFilter");
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -85,7 +84,6 @@ public final class TokenAuthenticationFilter extends GenericFilterBean
 		{
 			chain.doFilter(request, response);
 		}
-		System.out.println(" === AUTHENTICATION: " + SecurityContextHolder.getContext().getAuthentication());
 	}
 
 	private void checkLogin(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException
@@ -121,9 +119,7 @@ public final class TokenAuthenticationFilter extends GenericFilterBean
 		String base64 = tokenizer.nextToken();
 		String loginPassword = new String(Base64.decode(base64.getBytes(StandardCharsets.UTF_8)));
 
-		System.out.println("loginPassword = " + loginPassword);
 		tokenizer = new StringTokenizer(loginPassword, ":");
-		System.out.println("tokenizer = " + tokenizer);
 		checkUsernameAndPassword(tokenizer.nextToken(), tokenizer.nextToken(), httpResponse);
 	}
 
@@ -159,7 +155,6 @@ public final class TokenAuthenticationFilter extends GenericFilterBean
 		}
 		else
 		{
-			System.out.println(" *** Invalid " + HEADER_TOKEN + ' ' + token);
 			httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			doNotContinueWithRequestProcessing(httpRequest);
 		}

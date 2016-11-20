@@ -82,8 +82,6 @@ public class BankResource extends RestBaseResource {
             if (Util.isEmpty(banks)) {
                 dataAccess.create(bankStatus);
             } else {
-                System.out.println(String.format("Bank with id %s at location (%s,%s) alread exists",
-                        bankStatus.getId(), bankStatus.getLatX(), bankStatus.getLatY()));
             }
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (DataAccessException e) {
@@ -94,7 +92,13 @@ public class BankResource extends RestBaseResource {
 
     @RequestMapping(value = "/creates", method = RequestMethod.POST)
     public ResponseEntity<?> createBanks(RequestEntity<List<BankStatus>> requestEntity) {
+        if (requestEntity == null) {
+            return new ResponseEntity<Object>(String.format(ERROR, "No Entry to updated"), HttpStatus.OK);
+        }
         List<BankStatus> bankStatuses = requestEntity.getBody();
+        if (bankStatuses == null || bankStatuses.size() == 0) {
+            return new ResponseEntity<Object>(String.format(ERROR, "No Entry to updated"), HttpStatus.OK);
+        }
         for (BankStatus bankStatus : bankStatuses) {
             save(bankStatus);
         }

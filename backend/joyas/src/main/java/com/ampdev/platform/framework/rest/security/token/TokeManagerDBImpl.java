@@ -30,7 +30,6 @@ public class TokeManagerDBImpl implements TokenManager
 		String previous = validUsers.put(token, userName);
 		if (previous != null)
 		{
-			System.out.println(" *** SERIOUS PROBLEM HERE - we generated the same token (randomly?)!");
 			return null;
 		}
 		tokens.put(userName, tokenInfo);

@@ -392,6 +392,10 @@ jQuery(function($) {
                     }
                 });
             },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+             $('#mainMap').hide();
+             $('#errorMessage').show();
+          }
         });
     }
 

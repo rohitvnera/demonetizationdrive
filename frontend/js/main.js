@@ -393,7 +393,9 @@ jQuery(function($) {
                 });
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-             $('#myModal').modal('show');
+            $('#mainMap').hide();
+             $('#errorMessage').show();
+
           }
         });
     }

@@ -391,7 +391,10 @@ jQuery(function($) {
                         $.extend(paintedMapid, newMapIds);
                     }
                 });
-            }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+             $('#myModal').modal('show');
+          }
         });
     }
 
